@@ -1,0 +1,7 @@
+{
+  "name": "APID",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

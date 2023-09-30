@@ -1,0 +1,97 @@
+import { IonContent, IonPage } from '@ionic/react';
+import { CardActionArea } from '@mui/material';
+import { Link } from 'react-router-dom';
+import axios from "axios"
+import React, { useEffect, useState } from 'react';
+
+
+export const DemoVideo: React.FC = () => {
+
+    const [exerciseData, setExerciseData] = useState<{ description: string, link: string, name: string, image: string, id: number, data: object }>()
+
+    interface ExerciseNames {
+        [key: number]: string;
+    }
+
+
+    useEffect(() => {
+        axios.get("/exercise/", {
+            headers: {
+                Authorization: `Token ${localStorage.getItem(
+                    "aipd-patient-access-token"
+                )}`,
+            },
+        }).then((data: any) => {
+            // console.log(data.data)
+            getInfoOfSelectedExercise(data.data)
+        }).catch((e) => console.log(e))
+
+
+        // const exercise = localStorage?.getItem("exercise")
+        // console.log((exercise))
+        // if (exercise !== null)
+        //     console.log(exerciseData[ExerciseToID.indexOf(exercise)])
+
+
+    }, [])
+
+    const getInfoOfSelectedExercise = (data: any) => {
+        const exercise = localStorage.getItem("exercise")
+        if (exercise !== null) {
+            setExerciseData(data.filter((d: any) => d.name === exercise)[0])
+        }
+    }
+
+    const descriptionWithLineBreaks = exerciseData?.description.split('\n').map((line, index) => (
+        <React.Fragment key={index}>
+            {line}<br />
+        </React.Fragment>
+    ));
+
+    return (
+        <IonPage>
+            <IonContent fullscreen>
+                {
+                    exerciseData === undefined ? <></> : <>
+                        <div className='bg-white flex flex-col flex-grow pb-16'>
+                            {/* <p className='text-center p-3 text-xl text-bold'>Demo Video</p> */}
+                            <div className='flex justify-center bg-red-600'>
+                                <iframe
+                                    className=''
+                                    src={`${exerciseData.link}?autoplay=1&mute=1`}
+                                    title="YouTube video player"
+                                    width="100%"
+                                    height="300"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+
+                            <div className="border-2 border-x-0 border-black p-2">
+                                <div className='flex space-x-2 items-center'>
+                                    <div className="text-xl font-semibold">
+                                        {exerciseData.name}
+                                    </div>
+                                </div>
+                                <div>
+                                    {descriptionWithLineBreaks}
+                                </div>
+                            </div>
+                            <div className="p-2">
+                                <div className="p-1 my-4">
+                                    <Link to="/camera-rendering">
+                                        <CardActionArea>
+                                            <div className=" rounded-xl shadow-black shadow border bg-blue-600 text-white font-semibold p-1 text-center text-4xl py-12 mx-12">
+                                                Start Exercise
+                                            </div>
+                                        </CardActionArea>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                }
+
+            </IonContent>
+        </IonPage>
+    )
+}
