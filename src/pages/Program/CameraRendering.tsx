@@ -34,7 +34,7 @@ export const CameraRendering: React.FC = () => {
           !loading && warning &&
           <div className="w-screen h-screen absolute z-10 flex items-center justify-center">
             <div className="flex flex-col items-center">
-              <p className="bg-white text-red-600 font-fredokaone text-4xl w-screen text-center">You are not visible to us!</p>
+              <p className="bg-white text-red-600 font-fredokaone text-9xl w-screen text-center">You are not visible to us!</p>
             </div>
           </div>
         }
