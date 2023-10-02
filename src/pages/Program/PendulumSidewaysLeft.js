@@ -45,6 +45,7 @@ export default function PendulumSideways({
     settimer: settimer,
     repref: repref,
     setref: setref,
+    setloading: setloading
 }) {
     // ^ check if landmarks are detected
     if (results.poseLandmarks == undefined) return;
@@ -52,6 +53,7 @@ export default function PendulumSideways({
     if (playInitVoice) {
         playInitVoice = false
         playSound(pendulum_sideways)
+        setloading(false)
     }
 
 

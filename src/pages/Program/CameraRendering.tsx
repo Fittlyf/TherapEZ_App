@@ -1,8 +1,7 @@
 import { IonContent, IonPage } from "@ionic/react";
 import { CardActionArea } from "@mui/material";
 import CameraPoseDetect from "./CameraComponent";
-import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import { useRef, useState } from "react";
 
 export const CameraRendering: React.FC = () => {
 
@@ -11,9 +10,8 @@ export const CameraRendering: React.FC = () => {
   const messageRef = useRef<HTMLDivElement>(null);
 
   const [loading, setloading] = useState(true)
+  const [warning, setWarning] = useState(true)
   const [showCoutdown, setShowCoutdown] = useState(true);
-
-  
 
   return (
     <IonPage>
@@ -29,6 +27,14 @@ export const CameraRendering: React.FC = () => {
                 sandbox="allow-scripts"
               ></iframe>
               <p className="bg-white w-screen text-center">Loading Exercise ... </p>
+            </div>
+          </div>
+        }
+        {
+          !loading && warning &&
+          <div className="w-screen h-screen absolute z-10 flex items-center justify-center">
+            <div className="flex flex-col items-center">
+              <p className="bg-white text-red-600 font-fredokaone text-4xl w-screen text-center">You are not visible to us!</p>
             </div>
           </div>
         }
@@ -48,7 +54,7 @@ export const CameraRendering: React.FC = () => {
             <div>
             </div>
             <div>
-              <CameraPoseDetect showCoutdown={showCoutdown} setShowCoutdown={setShowCoutdown} loading={loading} setloading={setloading} repref={repref} setref={setref} messageRef={messageRef} />
+              <CameraPoseDetect showCoutdown={showCoutdown} setShowCoutdown={setShowCoutdown} loading={loading} setloading={setloading} setWarning={setWarning} repref={repref} setref={setref} messageRef={messageRef} />
             </div>
             {!loading && <div className="p-1 absolute w-full bottom-0">
               <div className={`${showCoutdown ? "" : "hidden"}`}>

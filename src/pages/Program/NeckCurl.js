@@ -28,7 +28,8 @@ export default function NeckCurl({
     canvasRef: canvasRef,
     webcamRef: webcamRef,
     settimer: settimer,
-    repref : repref
+    repref : repref,
+    setloading: setloading
 }) {
     // ^ check if landmarks are detected
     if (results.poseLandmarks == undefined) return;

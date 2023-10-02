@@ -70,12 +70,14 @@ export default function ArmsLock({
     repref: repref,
     setref: setref,
     messageRef: messageRef,
+    setloading: setloading
 }) {
     if (results.poseLandmarks == undefined || done) return; 
 
     if (playInitVoice){
         playInitVoice = false
         playSound(arms_lock)
+        setloading(false)
     }
 
     if (sets == localStorage.getItem("sets")) {

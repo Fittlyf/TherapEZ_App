@@ -50,6 +50,7 @@ export default function Butterfly({
     repref: repref,
     setref: setref,
     messageRef: messageRef,
+    setloading: setloading
 }) {
     // ^ check if landmarks are detected
     if (results.poseLandmarks == undefined) return;
@@ -57,6 +58,7 @@ export default function Butterfly({
     if (playInitVoice) {
         playInitVoice = false
         playSound(butterfly)
+        setloading(false)
         PlayReps(5, s5)
     }
 

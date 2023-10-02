@@ -32,6 +32,7 @@ export default function ElbowCurl({
   settimer: settimer,
   repref: repref,
   setref: setref,
+  setloading: setloading
 }) {
   // ^ check if landmarks are detected
   if (results.poseLandmarks == undefined) return;

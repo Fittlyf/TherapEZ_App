@@ -45,6 +45,7 @@ export default function PendulumStraight({
     settimer: settimer,
     repref: repref,
     setref: setref,
+    setloading: setloading
 }) {
     // ^ check if landmarks are detected
     if (results.poseLandmarks == undefined) return;
@@ -52,6 +53,7 @@ export default function PendulumStraight({
     if (playInitVoice) {
         playInitVoice = false
         playSound(pendulum_straight)
+        setloading(false)
     }
 
 

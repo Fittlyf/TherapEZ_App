@@ -20,7 +20,7 @@ import { Link } from "react-router-dom";
 import successSound from "../../sounds/excellent_work.wav";
 
 
-function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, repref, setref, messageRef }) {
+function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, setWarning, repref, setref, messageRef }) {
   // * Refs
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
@@ -150,16 +150,23 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
 
 
   function onResults(results) {
-    exercise({
-      results: results,
-      camera: camera,
-      canvasRef: canvasRef,
-      webcamRef: webcamRef,
-      settimer: settimer,
-      repref: repref,
-      setref: setref,
-      messageRef: messageRef,
-    })
+
+    if (results.poseLandmarks) {
+      setWarning(false)
+      exercise({
+        results: results,
+        camera: camera,
+        canvasRef: canvasRef,
+        webcamRef: webcamRef,
+        settimer: settimer,
+        repref: repref,
+        setref: setref,
+        messageRef: messageRef,
+        setloading: setloading
+      })
+    }else{
+      setWarning(true)
+    }
   }
 
   useEffect(() => {
@@ -208,12 +215,13 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
     });
 
     pose.onResults(onResults)
-    playSound(ArmsLock)
+
     if (webcamRef.current !== "undefined" && webcamRef.current !== null) {
       camera = new cam.Camera(webcamRef.current.video, {
         onFrame: async () => {
+          console.log("Frame started")
           await pose.send({ image: webcamRef.current.video }).then(() => {
-            setloading(false)
+            // setloading(false)
           });
         },
       });

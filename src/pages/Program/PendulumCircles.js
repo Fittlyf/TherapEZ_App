@@ -45,6 +45,7 @@ export default function PendulumCircles({
     settimer: settimer,
     repref: repref,
     setref: setref,
+    setloading: setloading
 }) {
     // ^ check if landmarks are detected
     if (results.poseLandmarks == undefined) return;
@@ -52,6 +53,7 @@ export default function PendulumCircles({
     if (playInitVoice) {
         playInitVoice = false
         playSound(pendulum_circles)
+        setloading(false)
     }
 
 
