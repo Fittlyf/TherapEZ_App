@@ -1,7 +1,6 @@
 import { CardActionArea, Paper } from "@mui/material"
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Link } from "react-router-dom";
-import { Carousel } from "antd";
 
 interface ExerciseCardProps {
     completed?: boolean
