@@ -3,6 +3,7 @@ import playSound from "../../utils/PlaySound"
 import bell from "../../sounds/bell.wav"
 import rep from "../../sounds/rep.mp3"
 import pendulum_circles from "../../sounds/pendulum_circles.wav"
+import stenycl from "../../Images/stencyl.png"
 
 var sets = 0;
 var playInitVoice = true
@@ -43,7 +44,7 @@ export default function PendulumCircles({
     canvasRef: canvasRef,
     webcamRef: webcamRef,
     settimer: settimer,
-    setShowCoutdown:setShowCoutdown,
+    setShowCoutdown: setShowCoutdown,
     repref: repref,
     setref: setref,
     setloading: setloading
@@ -101,6 +102,19 @@ export default function PendulumCircles({
         canvasElement.width,
         canvasElement.height
     );
+
+    // const img = new Image()
+    // img.src = '../../Images/stencyl.png'
+    // img.onload = () => {
+    //     canvasCtx.drawImage
+    //         (
+    //             img,
+    //             canvasElement.width * 0,
+    //             canvasElement.height * 0,
+    //             canvasElement.width * 1,
+    //             canvasElement.height * 1
+    //         )
+    // }
 
     canvasCtx.font = "30px Arial";
 

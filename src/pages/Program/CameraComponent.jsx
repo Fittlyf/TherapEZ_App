@@ -59,7 +59,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
           type: "video",
           mimeType: "video/webm",
           canvas: canvasRef.current,
-          frameRate: 5,
+          frameRate: 3,
           videoBitsPerSecond: 1000,
         });
 
