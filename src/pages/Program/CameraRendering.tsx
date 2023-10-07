@@ -11,7 +11,7 @@ export const CameraRendering: React.FC = () => {
 
   const [loading, setloading] = useState(true)
   const [warning, setWarning] = useState(true)
-  const [showCoutdown, setShowCoutdown] = useState(true);
+  const [showCoutdown, setShowCoutdown] = useState(false);
 
   return (
     <IonPage>
@@ -40,7 +40,7 @@ export const CameraRendering: React.FC = () => {
         }
         <div className="bg-white flex flex-col flex-grow pb-16">
           <div className="flex flex-col h-[calc(100vh-64px)]">
-            {showCoutdown && <div className={`p-1 ${loading ? "hidden" : ""} absolute w-full top-0`}>
+            {!showCoutdown && <div className={`p-1 ${loading ? "hidden" : ""} absolute w-full top-0`}>
               <div className="text-3xl text-white font-semibold p-1 flex justify-between">
                 <div className="w-28 h-28 bg-blue-600 rounded-full flex justify-center items-center">
                   <p ref={repref}></p>
@@ -57,7 +57,7 @@ export const CameraRendering: React.FC = () => {
               <CameraPoseDetect showCoutdown={showCoutdown} setShowCoutdown={setShowCoutdown} loading={loading} setloading={setloading} setWarning={setWarning} repref={repref} setref={setref} messageRef={messageRef} />
             </div>
             {!loading && <div className="p-1 absolute w-full bottom-0">
-              <div className={`${showCoutdown ? "" : "hidden"}`}>
+              <div className={`${!showCoutdown ? "" : "hidden"}`}>
                 <CardActionArea>
                   <div id="done-exercise" className="border rounded-full bg-blue-600 text-white font-semibold p-1 text-center">
                     Emergency Stop

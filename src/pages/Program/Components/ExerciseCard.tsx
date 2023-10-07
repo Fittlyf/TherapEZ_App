@@ -34,9 +34,9 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
         <Link to="/demo-video">
             <CardActionArea>
                 <div
-                    className="m-1.5 rounded-lg relative mt-8"
+                    className="m-3 rounded-lg relative mt-8"
                     style={{
-                        boxShadow: "rgba(0, 0, 0, 0.15) 0px 3px 5px"
+                        boxShadow: "rgba(0, 0, 0, 0.15) 0px 5px 5px"
                     }}
                 >
 

@@ -55,17 +55,6 @@ export const Home: React.FC = () => {
 
   // * an axios post to fetch the completed exercise, reloads whenever the value (state) changes
   useEffect(() => {
-    if ('speechSynthesis' in window) {
-      window.onload = function () {
-        console.log("loaded")
-        var text = "This text will be spoken on load.";
-        var utterance = new SpeechSynthesisUtterance(text);
-        utterance.voice = speechSynthesis.getVoices()[0];
-        utterance.volume = 1;
-        utterance.rate = 1;
-        speechSynthesis.speak(utterance);
-      };
-    }
     axios.get("/exercise_record/", {
       headers: {
         Authorization: `Token ${localStorage.getItem(
@@ -112,7 +101,7 @@ export const Home: React.FC = () => {
       entry ? entry.reps.toString() : "",
     );
 
-    history.push("/camera-rendering");
+    window.location.href = "/camera-rendering";
   }
 
   // * to get the exercise that needs to be done by the patient
@@ -225,11 +214,11 @@ export const Home: React.FC = () => {
         </div>
       </div>
       <div className="flex flex-col justify-center">
-        <img className="p-6" src={logo}></img>
+        <img className="p-6" src={logo} alt="Brand Logo"></img>
       </div>
 
       <div className="flex justify-center">
-        <button onClick={() => Handle$Start$All$Exercise()} className="bg-green-500 px-5 py-5 rounded-full">
+        <button onClick={() => Handle$Start$All$Exercise()} className="bg-green-500 px-5 py-5 rounded-full border-2 border-black shadow-2xl">
           Today's Session
         </button>
       </div>

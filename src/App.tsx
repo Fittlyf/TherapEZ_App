@@ -40,13 +40,10 @@ const patientRoutes = () => {
         <Route exact path="/camera-rendering">
           <CameraRendering />
         </Route>
-        <Route exact path="/program">
-          <Program />
-        </Route>
         <Route exact path="/results">
           <Results />
         </Route>
-        <Route path="/settings">
+        <Route exact path="/settings">
           <Settings />
         </Route>
       </IonRouterOutlet>
@@ -121,9 +118,9 @@ const App: React.FC = () => {
   useEffect(() => {
     if (!!localStorage.getItem("aipd-patient-access-token"))
       setRoutes(() => patientRoutes)
-    else if (localStorage.getItem("aipd-doctor-access-token"))
+    else if (!!localStorage.getItem("aipd-doctor-access-token"))
       setRoutes(() => doctorRoutes)
-    else if (localStorage.getItem("aipd-fittlyf-physio-access-token"))
+    else if (!!localStorage.getItem("aipd-fittlyf-physio-access-token"))
       setRoutes(() => fittlyfPhysioRoutes)
     else
       setRoutes(() => unauthenticatedRoutes)

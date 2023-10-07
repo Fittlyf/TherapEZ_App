@@ -28,14 +28,13 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   let recorder;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [uploading, setUploading] = useState(false)
 
   var camera = null;
 
-  const [timer, settimer] = useState(true);
+  const [timer, settimer] = useState(false);
 
   var exercise;
-
-
 
   useEffect(() => {
     if (!loading) {
@@ -61,7 +60,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
           mimeType: "video/webm",
           canvas: canvasRef.current,
           frameRate: 5,
-          videoBitsPerSecond: 1000000,
+          videoBitsPerSecond: 1000,
         });
 
         recorder.startRecording();
@@ -117,20 +116,26 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
 
   useEffect(() => {
     console.log(showCoutdown, StateRef.current)
-    if (showCoutdown && StateRef.current === 1) {
-      Handle$NextDirectExercise()
+    if (showCoutdown) {
+      stopRecordingAndUploadFileToFirebase()
+      setUploading(true)
     }
   }, [showCoutdown])
 
   const stopRecordingAndUploadFileToFirebase = async () => {
+    console.log("1")
     if (recorder) {
+      console.log("2")
       recorder.stopRecording(async () => {
+        console.log("3")
         try {
           const blob = recorder.getBlob();
           const videoURL = URL.createObjectURL(blob);
           URL.revokeObjectURL(videoURL);
           console.log(blob)
           await uploadFile(blob)
+          console.log("uploaded")
+          Handle$NextDirectExercise()
           // const file = new File(
           //   [blob],
           //   "demo.mp4",
@@ -146,28 +151,32 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
         }
       });
     }
+    // Handle$NextDirectExercise()
   };
 
 
   function onResults(results) {
-
-    if (results.poseLandmarks) {
-      setWarning(false)
-      exercise({
-        results: results,
-        camera: camera,
-        canvasRef: canvasRef,
-        webcamRef: webcamRef,
-        settimer: settimer,
-        repref: repref,
-        setref: setref,
-        messageRef: messageRef,
-        setloading: setloading
-      })
-    }else{
-      setWarning(true)
+    if (timer === false) {
+      if (results.poseLandmarks) {
+        setWarning(false)
+        exercise({
+          results: results,
+          camera: camera,
+          canvasRef: canvasRef,
+          webcamRef: webcamRef,
+          settimer: settimer,
+          setShowCoutdown: setShowCoutdown,
+          repref: repref,
+          setref: setref,
+          messageRef: messageRef,
+          setloading: setloading
+        })
+      } else {
+        setWarning(true)
+      }
     }
   }
+
 
   useEffect(() => {
     exercise = localStorage.getItem("exercise");
@@ -232,15 +241,18 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   return (
     <center>
       <div className="App">
-        {timer && showCoutdown ? (
+
+        {!timer ? (
           <>
             <Webcam id="webcam" ref={webcamRef} className="hidden w-screen" />
-            <canvas ref={canvasRef} className=" -ml-[100px] w-[600px] h-screen" />
+            {!uploading &&
+              <canvas ref={canvasRef} className=" -ml-[100px] w-[600px] h-screen" />
+            }
           </>
         ) : (
-          <>
-            {!timer && <CountDownComponent settimer={settimer} />}
-          </>
+          <div>
+            <CountDownComponent settimer={settimer} />
+          </div>
         )}
       </div>
       <div>
@@ -249,21 +261,15 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
         </div>
       </div>
       {
-        !showCoutdown && <div className="w-screen h-screen absolute z-50 top-0 ledft-0  flex flex-col justify-center items-center">
-          <button onClick={() => setShowCoutdown(true)} className="m-3 px-8 py-2 bg-green-500">Next</button>
-          <CountdownTimer seconds={5}
-            size={200}
-            strokeBgColor="white"
-            strokeColor="black"
-            strokeWidth={12}
-            setCountDown={setShowCoutdown}
-          />
+        uploading &&
+        <div className="w-screen h-screen absolute z-50 top-0 ledft-0  flex flex-col justify-center items-center">
+          <button onClick={Handle$NextDirectExercise} className="m-3 px-8 py-2 bg-green-500">Next</button>
+          <iframe src="https://giphy.com/embed/sSgvbe1m3n93G" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/juan-gabriel-sSgvbe1m3n93G">Uploading video please wait</a></p>
           <Link to="/" className="m-3 px-8 py-2 bg-green-500" >Home</Link>
         </div>
 
       }
     </center>
   );
-
 }
 export default CameraPoseDetect;

@@ -33,6 +33,7 @@ export default function ElbowCurl({
     canvasRef: canvasRef,
     webcamRef: webcamRef,
     settimer: settimer,
+    setShowCoutdown:setShowCoutdown,
     repref: repref,
     setref: setref,
     setloading: setloading
@@ -57,15 +58,13 @@ export default function ElbowCurl({
     if (reps == localStorage.getItem("reps") && sets === Number(localStorage.getItem("sets")) - 1) {
         reps = 0
         sets++;
+        setShowCoutdown(true)
         return;
-    }
-
-    // console.log(reps, Number(localStorage.getItem("reps")))
-    if (reps == localStorage.getItem("reps")) {
+    } else if (reps == localStorage.getItem("reps")) {
         reps = 0;
         sets++;
-        settimer(false);
-        camera.stop();
+        settimer(true);
+        // camera.stop();
         return;
     }
 
