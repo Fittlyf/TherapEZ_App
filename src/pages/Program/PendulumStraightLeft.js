@@ -6,6 +6,10 @@ import pendulum_straight from "../../sounds/pendulum_straight.wav"
 
 var sets = 0;
 var playInitVoice = true
+var resume = true
+var resumeAt;
+var relaxTime = 20 * 1000
+
 const connectingPoints = [
     [12, 14],
     [14, 16],
@@ -43,7 +47,7 @@ export default function PendulumStraight({
     canvasRef: canvasRef,
     webcamRef: webcamRef,
     settimer: settimer,
-    setShowCoutdown:setShowCoutdown,
+    setShowCoutdown: setShowCoutdown,
     repref: repref,
     setref: setref,
     setloading: setloading
@@ -55,27 +59,6 @@ export default function PendulumStraight({
         playInitVoice = false
         playSound(pendulum_straight)
         setloading(false)
-    }
-
-
-    // console.log(timer)
-    if (sets == localStorage.getItem("sets")) {
-        document.getElementById("done-exercise").click()
-        sets = 0
-        return;
-    }
-
-    if (reps == localStorage.getItem("reps") && sets === Number(localStorage.getItem("sets")) - 1) {
-        reps = 0
-        sets++;
-        setShowCoutdown(true)
-        return;
-    } else if (reps == localStorage.getItem("reps")) {
-        reps = 0;
-        sets++;
-        settimer(true);
-        // camera.stop();
-        return;
     }
 
     // * getting the video Width
@@ -102,196 +85,241 @@ export default function PendulumStraight({
         canvasElement.height
     );
 
-    canvasCtx.font = "30px Arial";
 
-    // * Some Important points
-    const leftShoulder = results.poseLandmarks[11];
-    const rightShoulder = results.poseLandmarks[12];
-    const leftElbow = results.poseLandmarks[13];
-    const rightElbow = results.poseLandmarks[14];
-    const leftWrist = results.poseLandmarks[15];
-    const rightWrist = results.poseLandmarks[16];
+    if (resume) {
 
-    const left_hip = results.poseLandmarks[23];
-    const right_hip = results.poseLandmarks[24];
-    const left_knee = results.poseLandmarks[25];
-    const right_knee = results.poseLandmarks[26];
-
-    let circleRadius = 100
-
-    var anglebetweenrslslw =
-        Math.atan2(
-            leftWrist.y - leftShoulder.y,
-            leftWrist.x - leftShoulder.x
-        ) -
-        Math.atan2(
-            leftShoulder.y - left_hip.y,
-            leftShoulder.x - left_hip.x
-        );
-    anglebetweenrslslw *= 180 / Math.PI;
-
-    const distanceRightShoulderRightWrist = Math.sqrt(
-        Math.pow(
-            leftShoulder.x * canvasElement.width - leftWrist.x * canvasElement.width,
-            2
-        ) +
-        Math.pow(
-            leftShoulder.y * canvasElement.height - leftWrist.y * canvasElement.height,
-            2
-        )
-    );
-
-    if (start) {
-        canvasCtx.setLineDash([5, 5]);
-        canvasCtx.beginPath();
-        canvasCtx.strokeStyle = hitOn === "lower" ? "#00ff00" : "#000000";
-        canvasCtx.lineWidth = 2;
-        canvasCtx.moveTo(leftShoulder.x * canvasElement.width, leftShoulder.y * canvasElement.height);
-        canvasCtx.lineTo(left_knee.x * canvasElement.width, left_knee.y * canvasElement.height);
-        canvasCtx.stroke();
-        canvasCtx.setLineDash([0, 0]);
-    }
-
-
-    //center
-    if (!start) {
-        canvasCtx.beginPath();
-        canvasCtx.strokeStyle = "#00FF00"
-        canvasCtx.lineWidth = 2;
-        canvasCtx.arc(
-            (left_knee.x * canvasElement.width),
-            ((left_knee.y + (leftShoulder.y - left_knee.y) * 0.15) * canvasElement.height),
-            circleRadius,
-            2 * Math.PI, false
-        );
-        canvasCtx.fillText(hitOn, left_knee.x * canvasElement.width, left_knee.y * canvasElement.height);
-        canvasCtx.stroke();
-    }
-
-    let WristX = leftWrist.x * canvasElement.width;
-    let WristY = leftWrist.y * canvasElement.height;
-
-    let LPX =
-        leftShoulder.x * canvasElement.width -
-        (distanceRightShoulderRightWrist) * Math.cos((45 * Math.PI) / 180);
-    let LPY =
-        leftShoulder.y * canvasElement.height +
-        (distanceRightShoulderRightWrist) * Math.sin((45 * Math.PI) / 180);
-
-    let RPX =
-        leftShoulder.x * canvasElement.width +
-        (distanceRightShoulderRightWrist) * Math.cos((30 * Math.PI) / 180);
-    let RPY =
-        leftShoulder.y * canvasElement.height +
-        (distanceRightShoulderRightWrist) * Math.sin((30 * Math.PI) / 180);
-
-    if (hitOn === 1) {
-        // canvasCtx.beginPath();
-        // canvasCtx.strokeStyle = "#00FF00";
-        // canvasCtx.lineWidth = 2;
-        // canvasCtx.arc(
-        //     RPX,
-        //     RPY,
-        //     circleRadius,
-        //     2 * Math.PI, false
-        // );
-        // canvasCtx.fillText(hitOn, RPX, RPY);
-        // canvasCtx.stroke();
-
-        canvasCtx.beginPath();
-        canvasCtx.strokeStyle = "#00FF00";
-        canvasCtx.lineWidth = 2;
-        canvasCtx.arc(
-            leftShoulder.x * canvasElement.width,
-            (leftShoulder.y * canvasElement.height + left_knee.y * canvasElement.height) * (2 / 5),
-            circleRadius,
-            2 * Math.PI, false
-        );
-        canvasCtx.fillText(hitOn, RPX, RPY);
-        canvasCtx.stroke();
-    }
-
-    if (hitOn === 2) {
-        // canvasCtx.beginPath();
-        // canvasCtx.strokeStyle = "#00FF00";
-        // canvasCtx.lineWidth = 2;
-        // canvasCtx.arc(
-        //     LPX,
-        //     LPY,
-        //     circleRadius,
-        //     2 * Math.PI, false
-        // );
-        // canvasCtx.fillText(hitOn, LPX, LPY);
-        // canvasCtx.stroke();
-
-        canvasCtx.beginPath();
-        canvasCtx.strokeStyle = "#00FF00";
-        canvasCtx.lineWidth = 2;
-        canvasCtx.arc(
-            left_knee.x * canvasElement.width,
-            left_knee.y * canvasElement.height,
-            circleRadius,
-            2 * Math.PI, false
-        );
-        canvasCtx.fillText(hitOn, RPX, RPY);
-        canvasCtx.stroke();
-    }
-
-    if (!start) {
-        if (distance(
-            left_knee.x * canvasElement.width,
-            left_knee.y * canvasElement.height,
-            WristX,
-            WristY
-        ) < circleRadius) {
-            playSound(bell)
-            start = 1
-            hitOn = 1
+        // console.log(timer)
+        if (sets == localStorage.getItem("sets")) {
+            document.getElementById("done-exercise").click()
+            sets = 0
+            return;
         }
-    }
 
-    if (hitOn === 1) {
-        if (distance(
-            leftShoulder.x * canvasElement.width,
-            (leftShoulder.y * canvasElement.height + left_knee.y * canvasElement.height) * (1 / 4),
-            WristX,
-            WristY
-        ) < circleRadius) {
-            playSound(rep)
-            hitOn = 2
+        if (reps == localStorage.getItem("reps") && sets === Number(localStorage.getItem("sets")) - 1) {
+            reps = 0
+            sets++;
+            setShowCoutdown(true)
+            return;
+        } else if (reps == localStorage.getItem("reps")) {
+            reps = 0;
+            sets++;
+            resume = false
+            console.log("PAUSE IT")
+            resumeAt = Date.now() + relaxTime
+            return;
         }
-    }
 
-    if (hitOn === 2) {
-        if (distance(
-            left_knee.x * canvasElement.width,
-            left_knee.y * canvasElement.height,
-            WristX,
-            WristY
-        ) < circleRadius) {
-            hitOn = 1
-            playSound(rep)
-            reps++
-        }
-    }
+        canvasCtx.font = "30px Arial";
 
+        // * Some Important points
+        const leftShoulder = results.poseLandmarks[11];
+        const rightShoulder = results.poseLandmarks[12];
+        const leftElbow = results.poseLandmarks[13];
+        const rightElbow = results.poseLandmarks[14];
+        const leftWrist = results.poseLandmarks[15];
+        const rightWrist = results.poseLandmarks[16];
 
-    repref.current.innerHTML = `${reps} / ${localStorage.getItem("reps")}`;
-    setref.current.innerHTML = `${sets} / ${localStorage.getItem("sets")}`;
+        const left_hip = results.poseLandmarks[23];
+        const right_hip = results.poseLandmarks[24];
+        const left_knee = results.poseLandmarks[25];
+        const right_knee = results.poseLandmarks[26];
 
-    // ^ Points that needs to be shown in the canvas
-    const allowedPoints = [11, 12, 13, 14, 15, 16, 23, 24];
+        let circleRadius = 100
 
-    if (results.poseLandmarks) {
-        connectingPoints.map((e) => {
-            connectPoint(canvasCtx, results, e[0], e[1], canvasRef);
-        });
+        var anglebetweenrslslw =
+            Math.atan2(
+                leftWrist.y - leftShoulder.y,
+                leftWrist.x - leftShoulder.x
+            ) -
+            Math.atan2(
+                leftShoulder.y - left_hip.y,
+                leftShoulder.x - left_hip.x
+            );
+        anglebetweenrslslw *= 180 / Math.PI;
 
-        drawPointOnCanvas(
-            results.poseLandmarks,
-            allowedPoints,
-            canvasCtx,
-            canvasElement
+        const distanceRightShoulderRightWrist = Math.sqrt(
+            Math.pow(
+                leftShoulder.x * canvasElement.width - leftWrist.x * canvasElement.width,
+                2
+            ) +
+            Math.pow(
+                leftShoulder.y * canvasElement.height - leftWrist.y * canvasElement.height,
+                2
+            )
         );
+
+        if (start) {
+            canvasCtx.setLineDash([5, 5]);
+            canvasCtx.beginPath();
+            canvasCtx.strokeStyle = hitOn === "lower" ? "#00ff00" : "#000000";
+            canvasCtx.lineWidth = 2;
+            canvasCtx.moveTo(leftShoulder.x * canvasElement.width, leftShoulder.y * canvasElement.height);
+            canvasCtx.lineTo(left_knee.x * canvasElement.width, left_knee.y * canvasElement.height);
+            canvasCtx.stroke();
+            canvasCtx.setLineDash([0, 0]);
+        }
+
+
+        //center
+        if (!start) {
+            canvasCtx.beginPath();
+            canvasCtx.strokeStyle = "#00FF00"
+            canvasCtx.lineWidth = 2;
+            canvasCtx.arc(
+                (left_knee.x * canvasElement.width),
+                ((left_knee.y + (leftShoulder.y - left_knee.y) * 0.15) * canvasElement.height),
+                circleRadius,
+                2 * Math.PI, false
+            );
+            canvasCtx.fillText(hitOn, left_knee.x * canvasElement.width, left_knee.y * canvasElement.height);
+            canvasCtx.stroke();
+        }
+
+        let WristX = leftWrist.x * canvasElement.width;
+        let WristY = leftWrist.y * canvasElement.height;
+
+        let LPX =
+            leftShoulder.x * canvasElement.width -
+            (distanceRightShoulderRightWrist) * Math.cos((45 * Math.PI) / 180);
+        let LPY =
+            leftShoulder.y * canvasElement.height +
+            (distanceRightShoulderRightWrist) * Math.sin((45 * Math.PI) / 180);
+
+        let RPX =
+            leftShoulder.x * canvasElement.width +
+            (distanceRightShoulderRightWrist) * Math.cos((30 * Math.PI) / 180);
+        let RPY =
+            leftShoulder.y * canvasElement.height +
+            (distanceRightShoulderRightWrist) * Math.sin((30 * Math.PI) / 180);
+
+        if (hitOn === 1) {
+            // canvasCtx.beginPath();
+            // canvasCtx.strokeStyle = "#00FF00";
+            // canvasCtx.lineWidth = 2;
+            // canvasCtx.arc(
+            //     RPX,
+            //     RPY,
+            //     circleRadius,
+            //     2 * Math.PI, false
+            // );
+            // canvasCtx.fillText(hitOn, RPX, RPY);
+            // canvasCtx.stroke();
+
+            canvasCtx.beginPath();
+            canvasCtx.strokeStyle = "#00FF00";
+            canvasCtx.lineWidth = 2;
+            canvasCtx.arc(
+                leftShoulder.x * canvasElement.width,
+                (leftShoulder.y * canvasElement.height + left_knee.y * canvasElement.height) * (2 / 5),
+                circleRadius,
+                2 * Math.PI, false
+            );
+            canvasCtx.fillText(hitOn, RPX, RPY);
+            canvasCtx.stroke();
+        }
+
+        if (hitOn === 2) {
+            // canvasCtx.beginPath();
+            // canvasCtx.strokeStyle = "#00FF00";
+            // canvasCtx.lineWidth = 2;
+            // canvasCtx.arc(
+            //     LPX,
+            //     LPY,
+            //     circleRadius,
+            //     2 * Math.PI, false
+            // );
+            // canvasCtx.fillText(hitOn, LPX, LPY);
+            // canvasCtx.stroke();
+
+            canvasCtx.beginPath();
+            canvasCtx.strokeStyle = "#00FF00";
+            canvasCtx.lineWidth = 2;
+            canvasCtx.arc(
+                left_knee.x * canvasElement.width,
+                left_knee.y * canvasElement.height,
+                circleRadius,
+                2 * Math.PI, false
+            );
+            canvasCtx.fillText(hitOn, RPX, RPY);
+            canvasCtx.stroke();
+        }
+
+        if (!start) {
+            if (distance(
+                left_knee.x * canvasElement.width,
+                left_knee.y * canvasElement.height,
+                WristX,
+                WristY
+            ) < circleRadius) {
+                playSound(bell)
+                start = 1
+                hitOn = 1
+            }
+        }
+
+        if (hitOn === 1) {
+            if (distance(
+                leftShoulder.x * canvasElement.width,
+                (leftShoulder.y * canvasElement.height + left_knee.y * canvasElement.height) * (1 / 4),
+                WristX,
+                WristY
+            ) < circleRadius) {
+                playSound(rep)
+                hitOn = 2
+            }
+        }
+
+        if (hitOn === 2) {
+            if (distance(
+                left_knee.x * canvasElement.width,
+                left_knee.y * canvasElement.height,
+                WristX,
+                WristY
+            ) < circleRadius) {
+                hitOn = 1
+                playSound(rep)
+                reps++
+            }
+        }
+
+
+        repref.current.innerHTML = `${reps} / ${localStorage.getItem("reps")}`;
+        setref.current.innerHTML = `${sets} / ${localStorage.getItem("sets")}`;
+
+        // ^ Points that needs to be shown in the canvas
+        const allowedPoints = [11, 12, 13, 14, 15, 16, 23, 24];
+
+        if (results.poseLandmarks) {
+            connectingPoints.map((e) => {
+                connectPoint(canvasCtx, results, e[0], e[1], canvasRef);
+            });
+
+            drawPointOnCanvas(
+                results.poseLandmarks,
+                allowedPoints,
+                canvasCtx,
+                canvasElement
+            );
+        }
+
+    } else {
+
+        const remainingTime = resumeAt - Date.now()
+
+        if (remainingTime <= 0) {
+            resume = true;
+        } else {
+            canvasCtx.scale(-1, 1);
+            canvasCtx.translate(-canvasElement.width, 0);
+
+            const timerText = `${Math.ceil(remainingTime / 1000)}`;
+            canvasCtx.font = "120px Arial";
+            canvasCtx.fillStyle = "#00FF00"; // Green color for the timer
+            canvasCtx.fillText(timerText, canvasElement.width / 2,
+                canvasElement.height / 2); // Adjust the position as needed
+
+            canvasCtx.scale(-1, 1);
+            canvasCtx.translate(-canvasElement.width, 0);
+        }
     }
 }

@@ -21,6 +21,9 @@ function distance(x1, y1, x2, y2) {
 var hitOn = 1;
 var reps = 0;
 var sets = 0;
+var resume = true
+var resumeAt;
+var relaxTime = 20 * 1000
 
 export default function NeckCurl({
     results: results,
@@ -38,8 +41,9 @@ export default function NeckCurl({
     if (reps === localStorage.getItem('sets')) {
         reps = 0;
         sets++;
-        settimer(false);
-        camera.stop();
+        resume = false
+        console.log("PAUSE IT")
+        resumeAt = Date.now() + relaxTime
         return;
     }
 

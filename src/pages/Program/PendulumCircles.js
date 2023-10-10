@@ -9,7 +9,7 @@ var sets = 0;
 var playInitVoice = true
 var resume = true
 var resumeAt;
-var relaxTime = 5 * 1000
+var relaxTime = 20 * 1000
 
 const connectingPoints = [
     [12, 14],
@@ -297,20 +297,6 @@ export default function PendulumCircles({
         } else {
             canvasCtx.scale(-1, 1);
             canvasCtx.translate(-canvasElement.width, 0);
-
-            // canvasCtx.beginPath();
-            // canvasCtx.arc(
-            //     canvasElement.width / 2,
-            //     canvasElement.height / 2,
-            //     100, // Adjust the radius as needed to control the thickness of the border
-            //     0,
-            //     2 * Math.PI
-            // );
-            // canvasCtx.strokeStyle = "#00FF00"; // Green color for the circle border
-            // canvasCtx.lineWidth = 10; // Adjust the line width as needed
-            // canvasCtx.stroke();
-            // canvasCtx.closePath();
-
 
             const timerText = `${Math.ceil(remainingTime / 1000)}`;
             canvasCtx.font = "120px Arial";

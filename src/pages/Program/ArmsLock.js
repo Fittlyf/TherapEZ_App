@@ -46,6 +46,10 @@ var message = 'Join the colored circle with same colors'
 const pset = localStorage.getItem("sets")
 const prep = localStorage.getItem("reps")
 
+var resume = true
+var resumeAt;
+var relaxTime = 20 * 1000
+
 let eltime = 0;
 const IntervalForCountingTimesElapsed = () => {
     const interval = setInterval(() => {
@@ -67,38 +71,18 @@ export default function ArmsLock({
     canvasRef: canvasRef,
     webcamRef: webcamRef,
     settimer: settimer,
-    setShowCoutdown:setShowCoutdown,
+    setShowCoutdown: setShowCoutdown,
     repref: repref,
     setref: setref,
     messageRef: messageRef,
     setloading: setloading
 }) {
-    if (results.poseLandmarks == undefined || done) return; 
+    if (results.poseLandmarks == undefined || done) return;
 
-    if (playInitVoice){
+    if (playInitVoice) {
         playInitVoice = false
         playSound(arms_lock)
         setloading(false)
-    }
-
-    if (sets == localStorage.getItem("sets")) {
-        done = 1;
-        document.getElementById("done-exercise").click()
-        sets = 0
-        return;
-    }
-
-    if (reps == localStorage.getItem("reps") && sets === Number(localStorage.getItem("sets")) - 1) {
-        reps = 0
-        sets++;
-        setShowCoutdown(true)
-        return;
-    } else if (reps == localStorage.getItem("reps")) {
-        reps = 0;
-        sets++;
-        settimer(true);
-        // camera.stop();
-        return;
     }
 
     message = eltime
@@ -127,109 +111,150 @@ export default function ArmsLock({
         canvasElement.height
     );
 
-    canvasCtx.font = "30px Arial";
 
-    const leftShoulder = results.poseLandmarks[11];
-    const rightShoulder = results.poseLandmarks[12];
-    const leftElbow = results.poseLandmarks[13];
-    const rightElbow = results.poseLandmarks[14];
-    const leftWrist = results.poseLandmarks[15];
-    const rightWrist = results.poseLandmarks[16];
 
-    if (start === 0) {
-        if (!red_touched) {
-            canvasCtx.beginPath();
-            canvasCtx.strokeStyle = "#00FF00"
-            canvasCtx.lineWidth = 2;
-            canvasCtx.arc(
-                (rightShoulder.x * canvasElement.width),
-                (rightShoulder.y * canvasElement.height),
-                50,
-                2 * Math.PI, false
+    if (resume) {
+
+        if (sets == localStorage.getItem("sets")) {
+            done = 1;
+            document.getElementById("done-exercise").click()
+            sets = 0
+            return;
+        }
+
+        if (reps == localStorage.getItem("reps") && sets === Number(localStorage.getItem("sets")) - 1) {
+            reps = 0
+            sets++;
+            setShowCoutdown(true)
+            return;
+        } else if (reps == localStorage.getItem("reps")) {
+            reps = 0;
+            sets++;
+            resume = false
+            console.log("PAUSE IT")
+            resumeAt = Date.now() + relaxTime
+            return;
+        }
+
+        canvasCtx.font = "30px Arial";
+
+        const leftShoulder = results.poseLandmarks[11];
+        const rightShoulder = results.poseLandmarks[12];
+        const leftElbow = results.poseLandmarks[13];
+        const rightElbow = results.poseLandmarks[14];
+        const leftWrist = results.poseLandmarks[15];
+        const rightWrist = results.poseLandmarks[16];
+
+        if (start === 0) {
+            if (!red_touched) {
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    (rightShoulder.x * canvasElement.width),
+                    (rightShoulder.y * canvasElement.height),
+                    50,
+                    2 * Math.PI, false
+                );
+                canvasCtx.stroke();
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    (leftWrist.x * canvasElement.width),
+                    (leftWrist.y * canvasElement.height),
+                    50,
+                    2 * Math.PI, false
+                );
+                canvasCtx.stroke();
+            }
+
+            if (!green_touched) {
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    (leftElbow.x * canvasElement.width),
+                    (leftElbow.y * canvasElement.height),
+                    50,
+                    2 * Math.PI, false
+                );
+                canvasCtx.stroke();
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    (rightWrist.x * canvasElement.width),
+                    (rightWrist.y * canvasElement.height),
+                    50,
+                    2 * Math.PI, false
+                );
+                canvasCtx.stroke();
+            }
+        }
+
+        if (start === 0) {
+            if ((distance(
+                leftWrist.x * canvasElement.width, leftWrist.y * canvasElement.height,
+                rightShoulder.x * canvasElement.width, rightShoulder.y * canvasElement.height
+            ) < 75)) {
+                red_touched = 1
+                green_touched = 0
+            }
+
+            if ((distance(
+                leftElbow.x * canvasElement.width, leftElbow.y * canvasElement.height,
+                rightWrist.x * canvasElement.width, rightWrist.y * canvasElement.height
+            ) < 75)) {
+                green_touched = 1
+            }
+
+            if (red_touched && green_touched) {
+                playSound(bell)
+                start = 1
+                message = 'Push Back'
+                IntervalForCountingTimesElapsed()
+            }
+        }
+
+        repref.current.innerHTML = `${reps} / ${localStorage.getItem("reps")}`;
+        setref.current.innerHTML = `${sets} /  ${localStorage.getItem("sets")}`;
+        // messageRef.current.innerHTML = `${message}`;
+
+        // ^ Points that needs to be shown in the canvas
+        const allowedPoints = [11, 12, 13, 14, 15, 16, 23, 24];
+
+        if (results.poseLandmarks) {
+            connectingPoints.map((e) => {
+                connectPoint(canvasCtx, results, e[0], e[1], canvasRef);
+            });
+
+            drawPointOnCanvas(
+                results.poseLandmarks,
+                allowedPoints,
+                canvasCtx,
+                canvasElement
             );
-            canvasCtx.stroke();
-            canvasCtx.beginPath();
-            canvasCtx.strokeStyle = "#00FF00"
-            canvasCtx.lineWidth = 2;
-            canvasCtx.arc(
-                (leftWrist.x * canvasElement.width),
-                (leftWrist.y * canvasElement.height),
-                50,
-                2 * Math.PI, false
-            );
-            canvasCtx.stroke();
         }
 
-        if (!green_touched) {
-            canvasCtx.beginPath();
-            canvasCtx.strokeStyle = "#00FF00"
-            canvasCtx.lineWidth = 2;
-            canvasCtx.arc(
-                (leftElbow.x * canvasElement.width),
-                (leftElbow.y * canvasElement.height),
-                50,
-                2 * Math.PI, false
-            );
-            canvasCtx.stroke();
-            canvasCtx.beginPath();
-            canvasCtx.strokeStyle = "#00FF00"
-            canvasCtx.lineWidth = 2;
-            canvasCtx.arc(
-                (rightWrist.x * canvasElement.width),
-                (rightWrist.y * canvasElement.height),
-                50,
-                2 * Math.PI, false
-            );
-            canvasCtx.stroke();
+    } else {
+
+        const remainingTime = resumeAt - Date.now()
+
+        if (remainingTime <= 0) {
+            resume = true;
+        } else {
+            canvasCtx.scale(-1, 1);
+            canvasCtx.translate(-canvasElement.width, 0);
+
+            const timerText = `${Math.ceil(remainingTime / 1000)}`;
+            canvasCtx.font = "120px Arial";
+            canvasCtx.fillStyle = "#00FF00"; // Green color for the timer
+            canvasCtx.fillText(timerText, canvasElement.width / 2,
+                canvasElement.height / 2); // Adjust the position as needed
+
+            canvasCtx.scale(-1, 1);
+            canvasCtx.translate(-canvasElement.width, 0);
         }
-    }
-
-    if (start === 0) {
-        if ((distance(
-            leftWrist.x * canvasElement.width, leftWrist.y * canvasElement.height,
-            rightShoulder.x * canvasElement.width, rightShoulder.y * canvasElement.height
-        ) < 75)) {
-            red_touched = 1
-            green_touched = 0
-        }
-
-        if ((distance(
-            leftElbow.x * canvasElement.width, leftElbow.y * canvasElement.height,
-            rightWrist.x * canvasElement.width, rightWrist.y * canvasElement.height
-        ) < 75)) {
-            green_touched = 1
-        }
-
-        if(red_touched && green_touched){
-            playSound(bell)
-            start = 1   
-            message = 'Push Back'
-            IntervalForCountingTimesElapsed()
-        }
-    }
-
-    // if (start === 1 && startedTimer === 1) {
-    //     startedTimer = 0
-    //     startTimer()
-    // }
-
-    repref.current.innerHTML = `${reps} / ${localStorage.getItem("reps")}`;
-    setref.current.innerHTML = `${sets} /  ${localStorage.getItem("sets")}`;
-    // messageRef.current.innerHTML = `${message}`;
-
-    // ^ Points that needs to be shown in the canvas
-    const allowedPoints = [11, 12, 13, 14, 15, 16, 23, 24];
-
-    if (results.poseLandmarks) {
-        connectingPoints.map((e) => {
-            connectPoint(canvasCtx, results, e[0], e[1], canvasRef);
-        });
-
-        drawPointOnCanvas(
-            results.poseLandmarks,
-            allowedPoints,
-            canvasCtx,
-            canvasElement
-        );
     }
 }

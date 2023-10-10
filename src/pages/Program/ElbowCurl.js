@@ -24,6 +24,10 @@ var ifStartingPointReached = false;
 var hitOn = "lower";
 var reps = 0;
 
+var resume = true
+var resumeAt;
+var relaxTime = 20 * 1000
+
 export default function ElbowCurl({
   results: results,
   camera: camera,
@@ -41,8 +45,9 @@ export default function ElbowCurl({
   if (reps === localStorage.getItem('sets')) {
     reps = 0;
     sets++;
-    settimer(false);
-    camera.stop();
+    resume = false
+    console.log("PAUSE IT")
+    resumeAt = Date.now() + relaxTime
     return;
   }
 

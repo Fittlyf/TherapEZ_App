@@ -26,6 +26,9 @@ function distance(x1, y1, x2, y2) {
 
 var hitOn = "lower";
 var reps = 0;
+var resume = true
+var resumeAt;
+var relaxTime = 20 * 1000
 
 export default function ElbowCurl({
     results: results,
@@ -33,7 +36,7 @@ export default function ElbowCurl({
     canvasRef: canvasRef,
     webcamRef: webcamRef,
     settimer: settimer,
-    setShowCoutdown:setShowCoutdown,
+    setShowCoutdown: setShowCoutdown,
     repref: repref,
     setref: setref,
     setloading: setloading
@@ -45,27 +48,6 @@ export default function ElbowCurl({
         playInitVoice = false
         playSound(lying_arms)
         setloading(false)
-    }
-
-
-    // console.log(timer)
-    if (sets == localStorage.getItem("sets")) {
-        document.getElementById("done-exercise").click()
-        sets = 0
-        return;
-    }
-
-    if (reps == localStorage.getItem("reps") && sets === Number(localStorage.getItem("sets")) - 1) {
-        reps = 0
-        sets++;
-        setShowCoutdown(true)
-        return;
-    } else if (reps == localStorage.getItem("reps")) {
-        reps = 0;
-        sets++;
-        settimer(true);
-        // camera.stop();
-        return;
     }
 
     // * getting the video Width
@@ -92,155 +74,198 @@ export default function ElbowCurl({
         canvasElement.height
     );
 
-    // * Some Important points
-    const leftShoulder = results.poseLandmarks[11];
-    const rightShoulder = results.poseLandmarks[12];
-    const rightHip = results.poseLandmarks[24];
-    const leftElbow = results.poseLandmarks[13];
-    const rightElbow = results.poseLandmarks[14];
-    const leftWrist = results.poseLandmarks[15];
-    const rightWrist = results.poseLandmarks[16];
+    if (resume) {
 
-    // ! Angle between right shoulder left shoulder and left wrist
-    var anglebetweenrslslw =
-        Math.atan2(
-            rightShoulder.y - leftShoulder.y,
-            rightShoulder.x - leftShoulder.x
-        ) - Math.atan2(leftWrist.y - leftShoulder.y, leftWrist.x - leftShoulder.x);
-
-    anglebetweenrslslw *= 180 / Math.PI;
-
-    if (anglebetweenrslslw < 0) {
-        anglebetweenrslslw = 360 + anglebetweenrslslw;
-    }
-
-    // ! Angle between left shoulder right shoulder and right wrist
-    var anglebetweenlsrsrw =
-        Math.atan2(
-            leftShoulder.y - rightShoulder.y,
-            leftShoulder.x - rightShoulder.x
-        ) -
-        Math.atan2(rightWrist.y - rightShoulder.y, rightWrist.x - rightShoulder.x);
-
-    anglebetweenlsrsrw *= 180 / Math.PI;
-
-    if (anglebetweenlsrsrw < 0) {
-        anglebetweenlsrsrw = 360 + anglebetweenlsrsrw;
-    }
-
-    // * Angle made at left elbow
-    var angleleft =
-        Math.atan2(leftShoulder.y - leftElbow.y, leftShoulder.x - leftElbow.x) -
-        Math.atan2(leftWrist.y - leftElbow.y, leftWrist.x - leftElbow.x);
-
-    // * Angle made at right elbow
-    var angleright =
-        Math.atan2(rightWrist.y - rightElbow.y, rightWrist.x - rightElbow.x) -
-        Math.atan2(rightShoulder.y - rightElbow.y, rightShoulder.x - rightElbow.x);
-
-    angleleft = angleleft * (180 / Math.PI);
-    if (angleleft > 180) {
-        angleleft = 360 - angleleft;
-    }
-    if (angleleft < 0) {
-        angleleft = 360 + angleleft;
-    }
-
-    angleright = angleright * (180 / Math.PI);
-
-    if (angleright > 180) {
-        angleright = 360 - angleright;
-    }
-    if (angleright < 0) {
-        angleright = 360 + angleright;
-    }
-
-    const distanceBetweenleftWristleftElbow = Math.sqrt(
-        Math.pow(
-            leftShoulder.x * canvasElement.width - rightHip.x * canvasElement.width,
-            2
-        ) +
-        Math.pow(
-            leftShoulder.y * canvasElement.height - rightHip.y * canvasElement.height,
-            2
-        )
-    );
-
-    // ! is starting point reached (buffer = 40deg)
-
-    {
-        let LPX = (leftShoulder.x * canvasElement.width + rightShoulder.x * canvasElement.width) / 2;
-        let LPY = leftShoulder.y * canvasElement.height;
-        let UPX = (leftShoulder.x * canvasElement.width + rightShoulder.x * canvasElement.width) / 2;
-        let UPY = leftShoulder.y * canvasElement.height - distanceBetweenleftWristleftElbow;
-
-        canvasCtx.setLineDash([5, 5]);
-        canvasCtx.beginPath();
-        canvasCtx.strokeStyle = hitOn === "lower" ? "#00ff00" : "#000000";
-        canvasCtx.lineWidth = 2;
-        canvasCtx.moveTo(LPX, LPY);
-        canvasCtx.lineTo(UPX, UPY);
-        canvasCtx.stroke();
-        canvasCtx.setLineDash([0, 0]);
-
-        canvasCtx.beginPath();
-        canvasCtx.strokeStyle = hitOn === "lower" ? "#00ff00" : "#000000";
-        canvasCtx.lineWidth = 2;
-        canvasCtx.arc(LPX, LPY, 100, 2 * Math.PI, false);
-        canvasCtx.stroke();
-
-        if (
-            distance(
-                LPX,
-                LPY,
-                leftWrist.x * canvasElement.width,
-                leftWrist.y * canvasElement.height
-            ) < 100
-        ) {
-            if (hitOn === "lower") {
-                playSound(rep)
-                hitOn = "upper"
-            };
+        if (sets == localStorage.getItem("sets")) {
+            document.getElementById("done-exercise").click()
+            sets = 0
+            return;
         }
 
-        canvasCtx.beginPath();
-        canvasCtx.strokeStyle = hitOn === "upper" ? "#00ff00" : "#000000";
-        canvasCtx.lineWidth = 2;
-        canvasCtx.arc(UPX, UPY, 60, 2 * Math.PI, false);
-        canvasCtx.stroke();
-
-        if (
-            distance(
-                UPX,
-                UPY,
-                leftWrist.x * canvasElement.width,
-                leftWrist.y * canvasElement.height
-            ) < 60
-        ) {
-            if (hitOn === "upper") {
-                playSound(rep)
-                reps++
-            };
-            hitOn = "lower";
+        if (reps == localStorage.getItem("reps") && sets === Number(localStorage.getItem("sets")) - 1) {
+            reps = 0
+            sets++;
+            setShowCoutdown(true)
+            return;
+        } else if (reps == localStorage.getItem("reps")) {
+            reps = 0;
+            sets++;
+            resume = false
+            console.log("PAUSE IT")
+            resumeAt = Date.now() + relaxTime
+            return;
         }
-    }
 
-    repref.current.innerHTML = `${reps} / ${localStorage.getItem("reps")}`;
-    setref.current.innerHTML = `${sets} /  ${localStorage.getItem("sets")}`;
+        // * Some Important points
+        const leftShoulder = results.poseLandmarks[11];
+        const rightShoulder = results.poseLandmarks[12];
+        const rightHip = results.poseLandmarks[24];
+        const leftElbow = results.poseLandmarks[13];
+        const rightElbow = results.poseLandmarks[14];
+        const leftWrist = results.poseLandmarks[15];
+        const rightWrist = results.poseLandmarks[16];
 
-    // ^ Points that needs to be shown in the canvas
-    const allowedPoints = [11, 12, 13, 14, 15, 16, 23, 24];
+        // ! Angle between right shoulder left shoulder and left wrist
+        var anglebetweenrslslw =
+            Math.atan2(
+                rightShoulder.y - leftShoulder.y,
+                rightShoulder.x - leftShoulder.x
+            ) - Math.atan2(leftWrist.y - leftShoulder.y, leftWrist.x - leftShoulder.x);
 
-    if (results.poseLandmarks) {
-        connectingPoints.map((e) => {
-            connectPoint(canvasCtx, results, e[0], e[1], canvasRef);
-        });
+        anglebetweenrslslw *= 180 / Math.PI;
 
-        drawPointOnCanvas(
-            results.poseLandmarks,
-            allowedPoints,
-            canvasCtx,
-            canvasElement
+        if (anglebetweenrslslw < 0) {
+            anglebetweenrslslw = 360 + anglebetweenrslslw;
+        }
+
+        // ! Angle between left shoulder right shoulder and right wrist
+        var anglebetweenlsrsrw =
+            Math.atan2(
+                leftShoulder.y - rightShoulder.y,
+                leftShoulder.x - rightShoulder.x
+            ) -
+            Math.atan2(rightWrist.y - rightShoulder.y, rightWrist.x - rightShoulder.x);
+
+        anglebetweenlsrsrw *= 180 / Math.PI;
+
+        if (anglebetweenlsrsrw < 0) {
+            anglebetweenlsrsrw = 360 + anglebetweenlsrsrw;
+        }
+
+        // * Angle made at left elbow
+        var angleleft =
+            Math.atan2(leftShoulder.y - leftElbow.y, leftShoulder.x - leftElbow.x) -
+            Math.atan2(leftWrist.y - leftElbow.y, leftWrist.x - leftElbow.x);
+
+        // * Angle made at right elbow
+        var angleright =
+            Math.atan2(rightWrist.y - rightElbow.y, rightWrist.x - rightElbow.x) -
+            Math.atan2(rightShoulder.y - rightElbow.y, rightShoulder.x - rightElbow.x);
+
+        angleleft = angleleft * (180 / Math.PI);
+        if (angleleft > 180) {
+            angleleft = 360 - angleleft;
+        }
+        if (angleleft < 0) {
+            angleleft = 360 + angleleft;
+        }
+
+        angleright = angleright * (180 / Math.PI);
+
+        if (angleright > 180) {
+            angleright = 360 - angleright;
+        }
+        if (angleright < 0) {
+            angleright = 360 + angleright;
+        }
+
+        const distanceBetweenleftWristleftElbow = Math.sqrt(
+            Math.pow(
+                leftShoulder.x * canvasElement.width - rightHip.x * canvasElement.width,
+                2
+            ) +
+            Math.pow(
+                leftShoulder.y * canvasElement.height - rightHip.y * canvasElement.height,
+                2
+            )
         );
+
+        // ! is starting point reached (buffer = 40deg)
+
+        {
+            let LPX = (leftShoulder.x * canvasElement.width + rightShoulder.x * canvasElement.width) / 2;
+            let LPY = leftShoulder.y * canvasElement.height;
+            let UPX = (leftShoulder.x * canvasElement.width + rightShoulder.x * canvasElement.width) / 2;
+            let UPY = leftShoulder.y * canvasElement.height - distanceBetweenleftWristleftElbow;
+
+            canvasCtx.setLineDash([5, 5]);
+            canvasCtx.beginPath();
+            canvasCtx.strokeStyle = hitOn === "lower" ? "#00ff00" : "#000000";
+            canvasCtx.lineWidth = 2;
+            canvasCtx.moveTo(LPX, LPY);
+            canvasCtx.lineTo(UPX, UPY);
+            canvasCtx.stroke();
+            canvasCtx.setLineDash([0, 0]);
+
+            canvasCtx.beginPath();
+            canvasCtx.strokeStyle = hitOn === "lower" ? "#00ff00" : "#000000";
+            canvasCtx.lineWidth = 2;
+            canvasCtx.arc(LPX, LPY, 100, 2 * Math.PI, false);
+            canvasCtx.stroke();
+
+            if (
+                distance(
+                    LPX,
+                    LPY,
+                    leftWrist.x * canvasElement.width,
+                    leftWrist.y * canvasElement.height
+                ) < 100
+            ) {
+                if (hitOn === "lower") {
+                    playSound(rep)
+                    hitOn = "upper"
+                };
+            }
+
+            canvasCtx.beginPath();
+            canvasCtx.strokeStyle = hitOn === "upper" ? "#00ff00" : "#000000";
+            canvasCtx.lineWidth = 2;
+            canvasCtx.arc(UPX, UPY, 60, 2 * Math.PI, false);
+            canvasCtx.stroke();
+
+            if (
+                distance(
+                    UPX,
+                    UPY,
+                    leftWrist.x * canvasElement.width,
+                    leftWrist.y * canvasElement.height
+                ) < 60
+            ) {
+                if (hitOn === "upper") {
+                    playSound(rep)
+                    reps++
+                };
+                hitOn = "lower";
+            }
+        }
+
+        repref.current.innerHTML = `${reps} / ${localStorage.getItem("reps")}`;
+        setref.current.innerHTML = `${sets} /  ${localStorage.getItem("sets")}`;
+
+        // ^ Points that needs to be shown in the canvas
+        const allowedPoints = [11, 12, 13, 14, 15, 16, 23, 24];
+
+        if (results.poseLandmarks) {
+            connectingPoints.map((e) => {
+                connectPoint(canvasCtx, results, e[0], e[1], canvasRef);
+            });
+
+            drawPointOnCanvas(
+                results.poseLandmarks,
+                allowedPoints,
+                canvasCtx,
+                canvasElement
+            );
+        }
+
+    } else {
+
+        const remainingTime = resumeAt - Date.now()
+
+        if (remainingTime <= 0) {
+            resume = true;
+        } else {
+            canvasCtx.scale(-1, 1);
+            canvasCtx.translate(-canvasElement.width, 0);
+
+            const timerText = `${Math.ceil(remainingTime / 1000)}`;
+            canvasCtx.font = "120px Arial";
+            canvasCtx.fillStyle = "#00FF00"; // Green color for the timer
+            canvasCtx.fillText(timerText, canvasElement.width / 2,
+                canvasElement.height / 2); // Adjust the position as needed
+
+            canvasCtx.scale(-1, 1);
+            canvasCtx.translate(-canvasElement.width, 0);
+        }
     }
 }
