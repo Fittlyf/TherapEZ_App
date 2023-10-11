@@ -19,13 +19,29 @@ import CountdownTimer from "./CountdownTimer";
 import { Link } from "react-router-dom";
 import successSound from "../../sounds/excellent_work.wav";
 
+let recorder;
+// const worker = new Worker('background-worker.js');
+
+const runInBackground = () => {
+  // recorder.stopRecording(async () => {
+  //   const blob = recorder.getBlob();
+  //   worker.postMessage({ blob: blob });
+  // });
+};
+
+// worker.onmessage = function (e) {
+//   if (e.data === 'done') {
+//     // The background task has completed
+//     // You can handle the results here
+//   }
+// };
 
 function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, setWarning, repref, setref, messageRef }) {
   // * Refs
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const StateRef = useRef(0);
-  let recorder;
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false)
@@ -117,41 +133,37 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   useEffect(() => {
     console.log(showCoutdown, StateRef.current)
     if (showCoutdown) {
-      stopRecordingAndUploadFileToFirebase()
+      runInBackground()
       setUploading(true)
     }
   }, [showCoutdown])
 
-  const stopRecordingAndUploadFileToFirebase = async () => {
-    console.log("1")
-    if (recorder) {
-      console.log("2")
-      recorder.stopRecording(async () => {
-        console.log("3")
-        try {
-          const blob = recorder.getBlob();
-          const videoURL = URL.createObjectURL(blob);
-          URL.revokeObjectURL(videoURL);
-          console.log(blob)
-          await uploadFile(blob)
-          console.log("uploaded")
-          Handle$NextDirectExercise()
-          // const file = new File(
-          //   [blob],
-          //   "demo.mp4",
-          //   {type : 'video/mp4'}
-          // )
-          // uploadFile(file) 
-          if (localStorage.getItem("allexercise") === "1") {
-            StateRef.current = 1;
-          }
-          else window.location.href = "/demo-video-logs"
-        } catch (error) {
-          console.log("--------------------------------> ", error)
-        }
-      });
-    }
-    // Handle$NextDirectExercise()
+  const stopRecordingAndUploadFileToFirebase = () => {
+    // if (recorder) {
+    //   recorder.stopRecording(async () => {
+    //     try {
+    //       const blob = recorder.getBlob();
+    //       const videoURL = URL.createObjectURL(blob);
+    //       URL.revokeObjectURL(videoURL);
+    //       console.log(blob)
+    //       await uploadFile(blob)
+    //       console.log("uploaded")
+    //       Handle$NextDirectExercise()
+    //       // const file = new File(
+    //       //   [blob],
+    //       //   "demo.mp4",
+    //       //   {type : 'video/mp4'}
+    //       // )
+    //       // uploadFile(file) 
+    //       if (localStorage.getItem("allexercise") === "1") {
+    //         StateRef.current = 1;
+    //       }
+    //       else window.location.href = "/demo-video-logs"
+    //     } catch (error) {
+    //       console.log("--------------------------------> ", error)
+    //     }
+    //   });
+    // }
   };
 
 

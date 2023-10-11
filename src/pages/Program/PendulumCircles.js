@@ -9,7 +9,7 @@ var sets = 0;
 var playInitVoice = true
 var resume = true
 var resumeAt;
-var relaxTime = 20 * 1000
+var relaxTime = 0 * 1000
 
 const connectingPoints = [
     [12, 14],
