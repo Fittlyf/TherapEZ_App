@@ -37,8 +37,8 @@ function distance3D(x1, y1, z1, x2, y2, z2) {
     return dist;
 }
 
-var start = 0;
-var hitOn = 0;
+var start = 1;
+var hitOn = 1;
 var reps = 0;
 var sets = 0;
 

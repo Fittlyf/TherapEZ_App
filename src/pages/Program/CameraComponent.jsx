@@ -20,20 +20,41 @@ import { Link } from "react-router-dom";
 import successSound from "../../sounds/excellent_work.wav";
 
 let recorder;
-const worker = new Worker('background-worker.js');
 
 const runInBackground = () => {
   recorder.stopRecording(async () => {
     const blob = recorder.getBlob();
-    worker.postMessage({ blob: blob });
-  });
-};
+    const videoURL = URL.createObjectURL(blob);
+    URL.revokeObjectURL(videoURL);
 
-worker.onmessage = function (e) {
-  if (e.data === 'done') {
-    // The background task has completed
-    // You can handle the results here
-  }
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistration()
+        .then((registration) => {
+          if (registration && registration.active) {
+
+            const worker = registration.active;
+            worker.onmessage = function (event) {
+              if (event.data === 'done') {
+                console.log('Task is done');
+              }
+            };
+
+            worker.postMessage({
+              blob: blob, exercise: Number(localStorage.getItem("exerciseID")),
+              patient: localStorage.getItem("patient-ID"), authToken: localStorage.getItem(
+                "aipd-patient-access-token"
+              )
+            });
+
+          } else {
+            console.error('Service worker is not registered or active.');
+          }
+        })
+        .catch((error) => {
+          console.error('Error accessing service worker registration:', error);
+        });
+    }
+  });
 };
 
 function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, setWarning, repref, setref, messageRef }) {
