@@ -20,21 +20,21 @@ import { Link } from "react-router-dom";
 import successSound from "../../sounds/excellent_work.wav";
 
 let recorder;
-// const worker = new Worker('background-worker.js');
+const worker = new Worker('background-worker.js');
 
 const runInBackground = () => {
-  // recorder.stopRecording(async () => {
-  //   const blob = recorder.getBlob();
-  //   worker.postMessage({ blob: blob });
-  // });
+  recorder.stopRecording(async () => {
+    const blob = recorder.getBlob();
+    worker.postMessage({ blob: blob });
+  });
 };
 
-// worker.onmessage = function (e) {
-//   if (e.data === 'done') {
-//     // The background task has completed
-//     // You can handle the results here
-//   }
-// };
+worker.onmessage = function (e) {
+  if (e.data === 'done') {
+    // The background task has completed
+    // You can handle the results here
+  }
+};
 
 function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, setWarning, repref, setref, messageRef }) {
   // * Refs
@@ -134,6 +134,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
     console.log(showCoutdown, StateRef.current)
     if (showCoutdown) {
       runInBackground()
+      // Handle$NextDirectExercise()
       setUploading(true)
     }
   }, [showCoutdown])
