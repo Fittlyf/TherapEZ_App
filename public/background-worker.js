@@ -21,7 +21,7 @@ const uploadFileFirebase = async (file) => {
 }
 
 const addExerciseDataToDatabase = async (blob, exercise, patient, authToken) => {
-    const databaseURL = 'http://127.0.0.1:8000/exercise_record/';
+    const databaseURL = 'http://13.232.102.80:8000/exercise_record/';
 
     const fileName = 'video.webm';
     const file = new File([blob], fileName, { type: blob.type });
