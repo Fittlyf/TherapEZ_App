@@ -13,56 +13,18 @@ import LyingArms from "./LyingArms";
 import Butterfly from "./Butterfly";
 import ArmsLock from "./ArmsLock";
 import RecordRTC from 'recordrtc';
-import { uploadFile } from "../../APIs/storage";
 import playSound from "../../utils/PlaySound";
-import CountdownTimer from "./CountdownTimer";
 import { Link } from "react-router-dom";
 import successSound from "../../sounds/excellent_work.wav";
 
 let recorder;
 
-const runInBackground = () => {
-  recorder.stopRecording(async () => {
-    const blob = recorder.getBlob();
-    const videoURL = URL.createObjectURL(blob);
-    URL.revokeObjectURL(videoURL);
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistration()
-        .then((registration) => {
-          if (registration && registration.active) {
-
-            const worker = registration.active;
-            worker.onmessage = function (event) {
-              if (event.data === 'done') {
-                console.log('Task is done');
-              }
-            };
-
-            worker.postMessage({
-              blob: blob, exercise: Number(localStorage.getItem("exerciseID")),
-              patient: localStorage.getItem("patient-ID"), authToken: localStorage.getItem(
-                "aipd-patient-access-token"
-              )
-            });
-
-          } else {
-            console.error('Service worker is not registered or active.');
-          }
-        })
-        .catch((error) => {
-          console.error('Error accessing service worker registration:', error);
-        });
-    }
-  });
-};
 
 function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, setWarning, repref, setref, messageRef }) {
   // * Refs
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const StateRef = useRef(0);
-
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false)
@@ -85,6 +47,41 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
       })
     }
   }, [loading])
+
+  const runInBackground = () => {
+    recorder.stopRecording(async () => {
+      const blob = recorder.getBlob();
+  
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistration()
+          .then((registration) => {
+            if (registration && registration.active) {
+  
+              const worker = registration.active;
+              worker.onmessage = function (event) {
+                if (event.data === 'done') {
+                  console.log('Task is done');
+                }
+              };
+  
+              worker.postMessage({
+                blob: blob, exercise: Number(localStorage.getItem("exerciseID")),
+                patient: localStorage.getItem("patient-ID"), authToken: localStorage.getItem(
+                  "aipd-patient-access-token"
+                )
+              });
+              Handle$NextDirectExercise()
+  
+            } else {
+              console.error('Service worker is not registered or active.');
+            }
+          })
+          .catch((error) => {
+            console.error('Error accessing service worker registration:', error);
+          });
+      }
+    });
+  };
 
   const startRecording = () => {
 
@@ -155,7 +152,6 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
     console.log(showCoutdown, StateRef.current)
     if (showCoutdown) {
       runInBackground()
-      // Handle$NextDirectExercise()
       setUploading(true)
     }
   }, [showCoutdown])

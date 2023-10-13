@@ -15,9 +15,8 @@ this.firebase.initializeApp(firebaseConfig);
 const storageRef = this.firebase.storage().ref().child(new Date().toUTCString());
 
 const uploadFileFirebase = async (file) => {
-    await storageRef.put(file).then(async (snapshot) => {
+    await this.firebase.storage.uploadBytes(storageRef, file).then(async (snapshot) => {
         console.log(snapshot);
-        // await getVideoURL(storageRef)
     });
 }
 
