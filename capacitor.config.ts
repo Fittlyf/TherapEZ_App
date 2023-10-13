@@ -3,7 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.technopolis.aipd',
   // linuxAndroidStudioPath: "/snap/android-s tudio/current/android-studio/bin/studio.sh",
-  appName: 'APID',
+  appName: 'TherapEZ',
   webDir: 'build',
   bundledWebRuntime: false,
   plugins: {
