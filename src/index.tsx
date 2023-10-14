@@ -13,9 +13,13 @@ axios.defaults.baseURL = 'http://13.232.102.80:8000';
 
 //check if browser supports service worker
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('background-worker.js');
-  console.log("Background worker registered")
-  // message.success("REGISTERED")
+  navigator.serviceWorker.register('/background-worker.js')
+        .then(registration => {
+            console.log('Service Worker registration successful', registration)
+        })
+        .catch(error => {
+            console.error('Service Worker registration failed:', error);
+        });
 }
 
 const container = document.getElementById("root");

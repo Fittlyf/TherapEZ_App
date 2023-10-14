@@ -9,7 +9,7 @@ var sets = 0;
 var playInitVoice = true
 var resume = true
 var resumeAt;
-var relaxTime = 0 * 1000
+var relaxTime = 20 * 1000
 
 const connectingPoints = [
     [12, 14],
@@ -37,8 +37,8 @@ function distance3D(x1, y1, z1, x2, y2, z2) {
     return dist;
 }
 
-var start = 1;
-var hitOn = 1;
+var start = 0;
+var hitOn = 0;
 var reps = 0;
 var sets = 0;
 
