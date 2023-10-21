@@ -41,7 +41,8 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
       document.getElementById("done-exercise").addEventListener("click", () => {
         playSound(successSound)
         setIsModalOpen(true)
-        stopRecordingAndUploadFileToFirebase()
+        // stopRecordingAndUploadFileToFirebase()
+        runInBackgroundWithEmergencyStop()
         setIsModalOpen(false)
         setShowCoutdown(false)
       })
@@ -71,7 +72,42 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
                 )
               });
               Handle$NextDirectExercise()
+              // window.location.href = "/"
+            } else {
+              console.error('Service worker is not registered or active.');
+            }
+          })
+          .catch((error) => {
+            console.error('Error accessing service worker registration:', error);
+          });
+      }
+    });
+  };
+
+  const runInBackgroundWithEmergencyStop = () => {
+    recorder.stopRecording(async () => {
+      const blob = recorder.getBlob();
   
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistration()
+          .then((registration) => {
+            if (registration && registration.active) {
+  
+              const worker = registration.active;
+              worker.onmessage = function (event) {
+                if (event.data === 'done') {
+                  console.log('Task is done');
+                }
+              };
+  
+              worker.postMessage({
+                blob: blob, exercise: Number(localStorage.getItem("exerciseID")),
+                patient: localStorage.getItem("patient-ID"), authToken: localStorage.getItem(
+                  "aipd-patient-access-token"
+                )
+              });
+              // Handle$NextDirectExercise()
+              window.location.href = "/"
             } else {
               console.error('Service worker is not registered or active.');
             }
