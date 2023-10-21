@@ -93,14 +93,14 @@ export default function PatientCard({ details }) {
                     </div>
                 </div>
                 <div className='flex space-x-2'>
-                    <CardActionArea onClick={() => { handleWhatsAppClick(details.user.username) }}>
+                    {/* <CardActionArea onClick={() => { handleWhatsAppClick(details.user.username) }}>
                         <div className='flex flex-1 space-x-2 justify-center bg-gray-200 rounded-md p-1'>
                             <WhatsAppIcon color='success' />
                             <div>
                                 Whatsapp
                             </div>
                         </div>
-                    </CardActionArea>
+                    </CardActionArea> */}
                     <CardActionArea onClick={() => { handleCallClick(details.user.username) }}>
                         <div className='flex flex-1 space-x-2 justify-center bg-[#3EBDE0FF] text-white rounded-md p-1'>
                             <CallIcon />
@@ -110,40 +110,7 @@ export default function PatientCard({ details }) {
                         </div>
                     </CardActionArea>
                 </div>
-                {/* <div className="text-lg font-semibold bg-green-50 rounded">
-                    {(details).user.username}
-                </div> */}
             </div>
         </>
     )
 }
-
-        // <>
-        //     <div className="border shadow-xl rounded m-1 p-2 mb-4 bg-slate-50">
-        //         <div className="flex justify-between">
-        //             <div className="text-2xl font-bold text-green-600 bg-green-50">
-        //                 {(details).user.first_name}
-        //                 &nbsp;
-        //                 {(details).user.last_name}
-        //             </div>
-        //             <div className="text-base">
-        //                 {(details).start_date}
-        //                 &nbsp; - &nbsp;
-        //                 {(details).end_date}
-        //             </div>
-        //         </div>
-        //         <div className="text-lg font-semibold bg-green-50 rounded">
-        //             {(details).user.username}
-        //         </div>
-        //         <div className="text-lg font-semibold text-red-500 bg-red-50 rounded">
-        //             {(details).condition.name}
-        //         </div>
-        //         {(details).condition.exercises.map((exercise) => {
-        //             return (
-        //                 <div>
-        //                     {exercise.name}
-        //                 </div>
-        //             );
-        //         })}
-        //     </div>
-        // </>

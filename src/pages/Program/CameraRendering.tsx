@@ -20,13 +20,7 @@ export const CameraRendering: React.FC = () => {
           loading &&
           <div className="w-screen h-screen absolute z-10 flex items-center justify-center">
             <div className="flex flex-col items-center">
-              <iframe
-                className="w-screen"
-                src="https://giphy.com/embed/4bjIKBOWUnVPICCzJc"
-                allowFullScreen
-                sandbox="allow-scripts"
-              ></iframe>
-              <p className="bg-white w-screen text-center">Loading Exercise ... </p>
+              <p className="bg-white w-screen text-center text-4xl">Loading Exercise ... Please keep your phone away from you and stand in front of the camera such that you are clearly visible to us and please wait for a few seconds. Make sure that you are connected to WIFI for best experience</p>
             </div>
           </div>
         }

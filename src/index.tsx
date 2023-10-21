@@ -8,7 +8,7 @@ import App from "./App"; // Import the main App component
 import "./index.css"; 
 
 // Set the base URL for Axios requests
-axios.defaults.baseURL = 'https://13.232.102.80';
+axios.defaults.baseURL = process.env.REACT_APP_API_BASEURL;
 // axios.defaults.baseURL = 'http://127.0.0.1:8000';
 
 // Check if the browser supports service workers

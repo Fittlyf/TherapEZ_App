@@ -116,15 +116,14 @@ export const Home: React.FC = () => {
       .then((data: any) => {
         console.log(data.data)
         const currentDate = new Date().toLocaleDateString();
-        const storedPromptReviewDate = new Date(localStorage.getItem("prompt_review") || '2003-04-22').toLocaleDateString();
-        // if (localStorage.getItem("prompt_review") === null || storedPromptReviewDate !== currentDate){
-        if (new Date(data.data[0]["prompt_review"]).toLocaleDateString() === currentDate) {
-          set_google_business_review_link(data.data[0]['doctor']['company']['google_business_review_link'])
-          set_google_business_name(data.data[0]['doctor']['company']['name'])
-          showModal()
-          localStorage.setItem("prompt_review", data.data[0]["prompt_review"])
-        }
+        
+        // if (new Date(data.data[0]["prompt_review"]).toLocaleDateString() === currentDate) {
+        //   set_google_business_review_link(data.data[0]['doctor']['company']['google_business_review_link'])
+        //   set_google_business_name(data.data[0]['doctor']['company']['name'])
+        //   showModal()
+        //   localStorage.setItem("prompt_review", data.data[0]["prompt_review"])
         // }
+
         setlogo(data.data[0].doctor.company.logo)
         localStorage.setItem("exerciseDetails", JSON.stringify(data.data[0]["condition"]["exercises"]))
         setExerciseDetails(data.data[0]["condition"]["exercises"]);
