@@ -1,8 +1,12 @@
 import { connectPoint, drawPointOnCanvas } from "./PoseFunctions";
-import playSound from "../../utils/PlaySound"
-import bell from "../../sounds/bell.wav"
-import rep from "../../sounds/rep.mp3"
-import pendulum_sideways from "../../sounds/pendulum_sideways.wav"
+import playSound from "../../../utils/PlaySound"
+import bell from "../../../sounds/bell.wav"
+import rep from "../../../sounds/rep.mp3"
+import pendulum_circles from "../../../sounds/pendulum_circles.wav"
+import RecordRTC from 'recordrtc';
+
+var globalStart = 0;
+var globalStop = 0
 
 var sets = 0;
 var playInitVoice = true
@@ -41,7 +45,105 @@ var hitOn = 0;
 var reps = 0;
 var sets = 0;
 
-export default function PendulumSideways({
+let recorder;
+
+const runInBackground = () => {
+    recorder.stopRecording(async () => {
+        const blob = recorder.getBlob();
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistration()
+                .then((registration) => {
+                    if (registration && registration.active) {
+
+                        const worker = registration.active;
+                        worker.onmessage = function (event) {
+                            if (event.data === 'done') {
+                                console.log('Task is done');
+                            }
+                        };
+
+                        worker.postMessage({
+                            blob: blob, exercise: Number(localStorage.getItem("exerciseID")),
+                            patient: localStorage.getItem("patient-ID"), authToken: localStorage.getItem(
+                                "aipd-patient-access-token"
+                            )
+                        });
+                        // window.location.href = "/"
+                    } else {
+                        console.error('Service worker is not registered or active.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error accessing service worker registration:', error);
+                });
+        }
+    });
+};
+
+const startRecording = (canvasRef) => {
+
+    navigator.mediaDevices
+        .getUserMedia({ video: true, audio: false })
+        .then((stream) => {
+
+            recorder = RecordRTC(stream, {
+                type: "video",
+                mimeType: "video/webm",
+                canvas: canvasRef.current,
+                frameRate: 3,
+                videoBitsPerSecond: 1000,
+            });
+
+            recorder.startRecording();
+        })
+        .catch((error) => {
+            console.error("Error accessing user media:", error);
+        });
+};
+
+function findEntryByExercise(data, exercise) {
+    const entry = data.find((entry) => entry.exercise === exercise);
+    return entry || null;
+}
+
+const Handle$NextDirectExercise = () => {
+    console.log("Preparing Next Exercise")
+    localStorage.setItem("Allexerciseid", (Number(localStorage.getItem("Allexerciseid")) + 1).toString());
+    const exerciseDetails = JSON.parse(localStorage.getItem("exerciseDetails"));
+    const individualSetReps = JSON.parse(localStorage.getItem("individualSetReps"));
+
+    if (Number(localStorage.getItem("Allexerciseid")) === exerciseDetails.length) {
+      window.location.href = "/"
+      return;
+    }
+
+    console.log(exerciseDetails)
+
+    const entry = findEntryByExercise(individualSetReps, Number(exerciseDetails[Number(localStorage.getItem("Allexerciseid") || "0")].id))
+
+
+    localStorage.setItem(
+      "sets",
+      entry ? entry.sets.toString() : "",
+    );
+    localStorage.setItem(
+      "reps",
+      entry ? entry.reps.toString() : "",
+    );
+
+    localStorage.setItem(
+      "exerciseID",
+      exerciseDetails[Number(localStorage.getItem("Allexerciseid") || "0")].id.toString()
+    );
+
+    localStorage.setItem(
+      "exercise",
+      exerciseDetails[Number(localStorage.getItem("Allexerciseid") || "0")].name
+    );
+}
+
+export default function PendulumCircles({
     results: results,
     camera: camera,
     canvasRef: canvasRef,
@@ -50,17 +152,22 @@ export default function PendulumSideways({
     setShowCoutdown: setShowCoutdown,
     repref: repref,
     setref: setref,
-    setloading: setloading
+    setloading: setloading,
+    exerciseName: exerciseName
 }) {
-    // ^ check if landmarks are detected
-    if (results.poseLandmarks == undefined) return;
+
+    if(globalStart === 0){
+        startRecording(canvasRef)
+        globalStart = 1
+    }
+
+    if (results.poseLandmarks === undefined) return;
 
     if (playInitVoice) {
         playInitVoice = false
-        playSound(pendulum_sideways)
+        playSound(pendulum_circles)
         setloading(false)
     }
-
 
     // * getting the video Width
     const videoWidth = webcamRef.current.video.videoWidth;
@@ -87,18 +194,21 @@ export default function PendulumSideways({
     );
 
     if (resume) {
-
-        // console.log(timer)
-        if (sets == localStorage.getItem("sets")) {
-            document.getElementById("done-exercise").click()
-            sets = 0
-            return;
-        }
+        // if (sets == localStorage.getItem("sets")) {
+        //     document.getElementById("done-exercise").click()
+        //     sets = 0
+        //     return;
+        // }
 
         if (reps == localStorage.getItem("reps") && sets === Number(localStorage.getItem("sets")) - 1) {
             reps = 0
             sets++;
-            setShowCoutdown(true)
+            runInBackground()
+            // wait for 40 seconds
+            resume = false
+            resumeAt = Date.now() + (40 * 1000)
+            globalStop = 1
+            // setShowCoutdown(true)
             return;
         } else if (reps == localStorage.getItem("reps")) {
             reps = 0;
@@ -106,6 +216,8 @@ export default function PendulumSideways({
             resume = false
             console.log("PAUSE IT")
             resumeAt = Date.now() + relaxTime
+            // settimer(true);
+            // camera.stop();
             return;
         }
 
@@ -125,7 +237,7 @@ export default function PendulumSideways({
         let circleRadius = distance3D(
             leftShoulder.x, leftShoulder.y, leftShoulder.z,
             rightShoulder.x, rightShoulder.y, rightShoulder.z
-        ) * 300
+        ) * 200
 
         var anglebetweenrslslw =
             Math.atan2(
@@ -183,17 +295,16 @@ export default function PendulumSideways({
 
         let LPX =
             rightShoulder.x * canvasElement.width -
-            (distanceRightShoulderRightWrist) * Math.cos((30 * Math.PI) / 180);
+            (distanceRightShoulderRightWrist) * Math.cos((45 * Math.PI) / 180);
         let LPY =
             rightShoulder.y * canvasElement.height +
-            (distanceRightShoulderRightWrist) * Math.sin((30 * Math.PI) / 180);
-
+            (distanceRightShoulderRightWrist) * Math.sin((45 * Math.PI) / 180);
         let RPX =
             rightShoulder.x * canvasElement.width +
-            (distanceRightShoulderRightWrist) * Math.cos((30 * Math.PI) / 180);
+            (distanceRightShoulderRightWrist) * Math.cos((45 * Math.PI) / 180);
         let RPY =
             rightShoulder.y * canvasElement.height +
-            (distanceRightShoulderRightWrist) * Math.sin((30 * Math.PI) / 180);
+            (distanceRightShoulderRightWrist) * Math.sin((45 * Math.PI) / 180);
 
         if (hitOn === 1) {
             canvasCtx.beginPath();
@@ -245,7 +356,7 @@ export default function PendulumSideways({
             ) < circleRadius) {
                 playSound(rep)
                 hitOn = 2
-            } else if (anglebetweenrslslw < 150) {
+            } else if (anglebetweenrslslw < 170) {
                 playSound(rep)
                 hitOn = 2
             }
@@ -261,14 +372,12 @@ export default function PendulumSideways({
                 playSound(rep)
                 hitOn = 1
                 reps++
-            } else if (anglebetweenrslslw > 210) {
+            } else if (anglebetweenrslslw > 190) {
                 playSound(rep)
                 hitOn = 1
                 reps++
             }
         }
-
-        // console.log(hitOn)
 
 
         repref.current.innerHTML = `${reps} / ${localStorage.getItem("reps")}`;
@@ -290,12 +399,18 @@ export default function PendulumSideways({
             );
         }
 
+        // maybe till here
     } else {
 
         const remainingTime = resumeAt - Date.now()
 
         if (remainingTime <= 0) {
-            resume = true;
+            if(globalStop){
+                Handle$NextDirectExercise()
+                exerciseName.current = "Pendulum Sideways Right"
+            }
+            else
+                resume = true;
         } else {
             canvasCtx.scale(-1, 1);
             canvasCtx.translate(-canvasElement.width, 0);

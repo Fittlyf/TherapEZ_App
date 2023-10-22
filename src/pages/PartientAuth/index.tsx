@@ -1,7 +1,7 @@
 import { IonContent, IonPage } from "@ionic/react"
 import { OutlinedInput } from "@mui/material"
 import { useState } from "react"
-import { Link, useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import { ReactComponent as DoctorIcon } from "../../SVGs/doctor.svg"
 import AIPDLogo from "../../Images/aipdlogo.png"
 import GradientButton from "../../components/GradientButton"

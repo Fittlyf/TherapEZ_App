@@ -3,19 +3,22 @@ import { useRef, useEffect, useState } from "react";
 import * as cam from "@mediapipe/camera_utils";
 import Webcam from "react-webcam";
 import { CountDownComponent } from "./CountDownComponent";
-import PendulumSideways from "./PendulumSideways";
-import PendulumCircles from "./PendulumCircles";
-import PendulumStraight from "./PendulumStraight";
-import PendulumSidewaysLeft from "./PendulumSidewaysLeft";
-import PendulumCirclesLeft from "./PendulumCirclesLeft";
-import PendulumStraightLeft from "./PendulumStraightLeft";
-import LyingArms from "./LyingArms";
-import Butterfly from "./Butterfly";
-import ArmsLock from "./ArmsLock";
+
+import PendulumCircles from "./Exercises/PendulumCircles";
+import PendulumSideways from "./Exercises/PendulumSideways";
+import PendulumStraight from "./Exercises/PendulumStraight";
+import Butterfly from "./Exercises/Butterfly";
+import LyingArms from "./Exercises/LyingArms";
+import ArmsLock from "./Exercises/ArmsLock";
+import PendulumCirclesLeft from "./Exercises/PendulumCirclesLeft";
+import PendulumSidewaysLeft from "./Exercises/PendulumSidewaysLeft";
+import PendulumStraightLeft from "./Exercises/PendulumStraightLeft";
+
 import RecordRTC from 'recordrtc';
 import playSound from "../../utils/PlaySound";
 import { Link } from "react-router-dom";
 import successSound from "../../sounds/excellent_work.wav";
+import ExerciseManager from "./ExerciseManager";
 
 let recorder;
 
@@ -25,6 +28,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const StateRef = useRef(0);
+  const exerciseName = useRef("")
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false)
@@ -37,7 +41,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
 
   useEffect(() => {
     if (!loading) {
-      startRecording();
+      // startRecording();
       document.getElementById("done-exercise").addEventListener("click", () => {
         playSound(successSound)
         setIsModalOpen(true)
@@ -49,40 +53,40 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
     }
   }, [loading])
 
-  const runInBackground = () => {
-    recorder.stopRecording(async () => {
-      const blob = recorder.getBlob();
+  // const runInBackground = () => {
+  //   recorder.stopRecording(async () => {
+  //     const blob = recorder.getBlob();
   
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistration()
-          .then((registration) => {
-            if (registration && registration.active) {
+  //     if ('serviceWorker' in navigator) {
+  //       navigator.serviceWorker.getRegistration()
+  //         .then((registration) => {
+  //           if (registration && registration.active) {
   
-              const worker = registration.active;
-              worker.onmessage = function (event) {
-                if (event.data === 'done') {
-                  console.log('Task is done');
-                }
-              };
+  //             const worker = registration.active;
+  //             worker.onmessage = function (event) {
+  //               if (event.data === 'done') {
+  //                 console.log('Task is done');
+  //               }
+  //             };
   
-              worker.postMessage({
-                blob: blob, exercise: Number(localStorage.getItem("exerciseID")),
-                patient: localStorage.getItem("patient-ID"), authToken: localStorage.getItem(
-                  "aipd-patient-access-token"
-                )
-              });
-              Handle$NextDirectExercise()
-              // window.location.href = "/"
-            } else {
-              console.error('Service worker is not registered or active.');
-            }
-          })
-          .catch((error) => {
-            console.error('Error accessing service worker registration:', error);
-          });
-      }
-    });
-  };
+  //             worker.postMessage({
+  //               blob: blob, exercise: Number(localStorage.getItem("exerciseID")),
+  //               patient: localStorage.getItem("patient-ID"), authToken: localStorage.getItem(
+  //                 "aipd-patient-access-token"
+  //               )
+  //             });
+  //             Handle$NextDirectExercise()
+  //             // window.location.href = "/"
+  //           } else {
+  //             console.error('Service worker is not registered or active.');
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           console.error('Error accessing service worker registration:', error);
+  //         });
+  //     }
+  //   });
+  // };
 
   const runInBackgroundWithEmergencyStop = () => {
     recorder.stopRecording(async () => {
@@ -119,26 +123,26 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
     });
   };
 
-  const startRecording = () => {
+  // const startRecording = () => {
 
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: false })
-      .then((stream) => {
+  //   navigator.mediaDevices
+  //     .getUserMedia({ video: true, audio: false })
+  //     .then((stream) => {
 
-        recorder = RecordRTC(stream, {
-          type: "video",
-          mimeType: "video/webm",
-          canvas: canvasRef.current,
-          frameRate: 3,
-          videoBitsPerSecond: 1000,
-        });
+  //       recorder = RecordRTC(stream, {
+  //         type: "video",
+  //         mimeType: "video/webm",
+  //         canvas: canvasRef.current,
+  //         frameRate: 3,
+  //         videoBitsPerSecond: 1000,
+  //       });
 
-        recorder.startRecording();
-      })
-      .catch((error) => {
-        console.error("Error accessing user media:", error);
-      });
-  };
+  //       recorder.startRecording();
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error accessing user media:", error);
+  //     });
+  // };
 
 
   function findEntryByExercise(data, exercise) {
@@ -187,7 +191,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   useEffect(() => {
     console.log(showCoutdown, StateRef.current)
     if (showCoutdown) {
-      runInBackground()
+      // runInBackground()
       setUploading(true)
     }
   }, [showCoutdown])
@@ -225,7 +229,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
     if (timer === false) {
       if (results.poseLandmarks) {
         setWarning(false)
-        exercise({
+        ExerciseManager({
           results: results,
           camera: camera,
           canvasRef: canvasRef,
@@ -235,7 +239,8 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
           repref: repref,
           setref: setref,
           messageRef: messageRef,
-          setloading: setloading
+          setloading: setloading,
+          exerciseName:exerciseName
         })
       } else {
         setWarning(true)
@@ -245,32 +250,32 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
 
 
   useEffect(() => {
-    exercise = localStorage.getItem("exercise");
-    if (exercise === 'Pendulum Straight Right') {
+    exerciseName.current = localStorage.getItem("exercise");
+    if (exerciseName === 'Pendulum Straight Right') {
       exercise = PendulumStraight
     }
-    else if (exercise === 'Pendulum Sideways Right') {
+    else if (exerciseName.current === 'Pendulum Sideways Right') {
       exercise = PendulumSideways
     }
-    else if (exercise === 'Pendulum Circles Right') {
+    else if (exerciseName.current === 'Pendulum Circles Right') {
       exercise = PendulumCircles
     }
-    else if (exercise === 'Pendulum Straight Left') {
+    else if (exerciseName.current === 'Pendulum Straight Left') {
       exercise = PendulumStraightLeft
     }
-    else if (exercise === 'Pendulum Sideways Left') {
+    else if (exerciseName.current === 'Pendulum Sideways Left') {
       exercise = PendulumSidewaysLeft
     }
-    else if (exercise === 'Pendulum Circles Left') {
+    else if (exerciseName.current === 'Pendulum Circles Left') {
       exercise = PendulumCirclesLeft
     }
-    else if (exercise === 'Butterfly') {
+    else if (exerciseName.current === 'Butterfly') {
       exercise = Butterfly
     }
-    else if (exercise === 'Lying Arms') {
+    else if (exerciseName.current === 'Lying Arms') {
       exercise = LyingArms
     }
-    else if (exercise === 'Arms Lock') {
+    else if (exerciseName.current === 'Arms Lock') {
       exercise = ArmsLock
     }
 

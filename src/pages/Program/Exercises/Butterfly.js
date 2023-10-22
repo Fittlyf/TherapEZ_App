@@ -1,10 +1,12 @@
 import { connectPoint, drawPointOnCanvas } from "./PoseFunctions";
-import playSound from "../../utils/PlaySound"
-import bell from "../../sounds/bell.wav"
-import butterfly from "../../sounds/butterfly.wav"
-import rep from "../../sounds/rep.mp3"
-import { PlayReps } from "../../utils/PlaySound";
-import s5 from "../../sounds/Reps/5.mp3"
+import playSound from "../../../utils/PlaySound"
+import bell from "../../../sounds/bell.wav"
+import butterfly from "../../../sounds/butterfly.wav"
+import rep from "../../../sounds/rep.mp3"
+import RecordRTC from 'recordrtc';
+
+var globalStart = 0;
+var globalStop = 0
 
 var sets = 0;
 
@@ -45,6 +47,105 @@ var resume = true
 var resumeAt;
 var relaxTime = 20 * 1000
 
+let recorder;
+
+const runInBackground = () => {
+    recorder.stopRecording(async () => {
+        const blob = recorder.getBlob();
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistration()
+                .then((registration) => {
+                    if (registration && registration.active) {
+
+                        const worker = registration.active;
+                        worker.onmessage = function (event) {
+                            if (event.data === 'done') {
+                                console.log('Task is done');
+                            }
+                        };
+
+                        worker.postMessage({
+                            blob: blob, exercise: Number(localStorage.getItem("exerciseID")),
+                            patient: localStorage.getItem("patient-ID"), authToken: localStorage.getItem(
+                                "aipd-patient-access-token"
+                            )
+                        });
+                        // window.location.href = "/"
+                    } else {
+                        console.error('Service worker is not registered or active.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error accessing service worker registration:', error);
+                });
+        }
+    });
+};
+
+const startRecording = (canvasRef) => {
+
+    navigator.mediaDevices
+        .getUserMedia({ video: true, audio: false })
+        .then((stream) => {
+
+            recorder = RecordRTC(stream, {
+                type: "video",
+                mimeType: "video/webm",
+                canvas: canvasRef.current,
+                frameRate: 3,
+                videoBitsPerSecond: 1000,
+            });
+
+            recorder.startRecording();
+        })
+        .catch((error) => {
+            console.error("Error accessing user media:", error);
+        });
+};
+
+function findEntryByExercise(data, exercise) {
+    const entry = data.find((entry) => entry.exercise === exercise);
+    return entry || null;
+}
+
+const Handle$NextDirectExercise = () => {
+    console.log("Preparing Next Exercise")
+    localStorage.setItem("Allexerciseid", (Number(localStorage.getItem("Allexerciseid")) + 1).toString());
+    const exerciseDetails = JSON.parse(localStorage.getItem("exerciseDetails"));
+    const individualSetReps = JSON.parse(localStorage.getItem("individualSetReps"));
+
+    if (Number(localStorage.getItem("Allexerciseid")) === exerciseDetails.length) {
+        window.location.href = "/"
+        return;
+    }
+
+    console.log(exerciseDetails)
+
+    const entry = findEntryByExercise(individualSetReps, Number(exerciseDetails[Number(localStorage.getItem("Allexerciseid") || "0")].id))
+
+
+    localStorage.setItem(
+        "sets",
+        entry ? entry.sets.toString() : "",
+    );
+    localStorage.setItem(
+        "reps",
+        entry ? entry.reps.toString() : "",
+    );
+
+    localStorage.setItem(
+        "exerciseID",
+        exerciseDetails[Number(localStorage.getItem("Allexerciseid") || "0")].id.toString()
+    );
+
+    localStorage.setItem(
+        "exercise",
+        exerciseDetails[Number(localStorage.getItem("Allexerciseid") || "0")].name
+    );
+}
+
+
 export default function Butterfly({
     results: results,
     camera: camera,
@@ -55,8 +156,14 @@ export default function Butterfly({
     repref: repref,
     setref: setref,
     messageRef: messageRef,
-    setloading: setloading
+    setloading: setloading,
+    exerciseName: exerciseName
 }) {
+
+    if (globalStart === 0) {
+        startRecording(canvasRef)
+        globalStart = 1
+    }
     // ^ check if landmarks are detected
     if (results.poseLandmarks == undefined) return;
 
@@ -64,7 +171,6 @@ export default function Butterfly({
         playInitVoice = false
         playSound(butterfly)
         setloading(false)
-        PlayReps(5, s5)
     }
 
     // * getting the video Width
@@ -95,17 +201,21 @@ export default function Butterfly({
 
     if (resume) {
 
-        if (sets == localStorage.getItem("sets")) {
-            document.getElementById("done-exercise").click()
-            sets = 0
-            return;
-        }
+        // if (sets == localStorage.getItem("sets")) {
+        //     document.getElementById("done-exercise").click()
+        //     sets = 0
+        //     return;
+        // }
 
         if (reps == localStorage.getItem("reps") && sets === Number(localStorage.getItem("sets")) - 1) {
             reps = 0
             sets++;
-            setShowCoutdown(true)
-            return;
+            runInBackground()
+            // wait for 40 seconds
+            resume = false
+            resumeAt = Date.now() + (40 * 1000)
+            globalStop = 1
+            // setShowCoutdown(true)
         } else if (reps == localStorage.getItem("reps")) {
             reps = 0;
             sets++;
@@ -268,7 +378,11 @@ export default function Butterfly({
         const remainingTime = resumeAt - Date.now()
 
         if (remainingTime <= 0) {
-            resume = true;
+            if (globalStop) {
+                Handle$NextDirectExercise()
+                exerciseName.current = "Lying Arms"
+            } else
+                resume = true;
         } else {
             canvasCtx.scale(-1, 1);
             canvasCtx.translate(-canvasElement.width, 0);
