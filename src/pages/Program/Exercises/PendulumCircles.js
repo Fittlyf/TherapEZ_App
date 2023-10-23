@@ -206,7 +206,8 @@ export default function PendulumCircles({
             runInBackground()
             // wait for 40 seconds
             resume = false
-            resumeAt = Date.now() + (40 * 1000)
+            relaxTime = 40 * 1000
+            resumeAt = Date.now() + relaxTime
             globalStop = 1
             // setShowCoutdown(true)
             return;
@@ -418,6 +419,9 @@ export default function PendulumCircles({
             const timerText = `${Math.ceil(remainingTime / 1000)}`;
             canvasCtx.font = "120px Arial";
             canvasCtx.fillStyle = "#00FF00"; // Green color for the timer
+            if(relaxTime === 40 * 1000)
+                canvasCtx.fillText("Please Wait...", 0,
+                    canvasElement.height / 4);
             canvasCtx.fillText(timerText, canvasElement.width / 2,
                 canvasElement.height / 2); // Adjust the position as needed
 
