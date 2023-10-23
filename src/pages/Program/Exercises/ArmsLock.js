@@ -238,7 +238,7 @@ export default function ArmsLock({
             runInBackground()
             // wait for 40 seconds
             resume = false
-            relaxTime = 40 * 1000
+            relaxTime = 0 * 1000
             resumeAt = Date.now() + relaxTime
             globalStop = 1
             // setShowCoutdown(true)

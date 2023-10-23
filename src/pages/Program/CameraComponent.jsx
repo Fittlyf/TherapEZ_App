@@ -42,14 +42,14 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   useEffect(() => {
     if (!loading) {
       // startRecording();
-      document.getElementById("done-exercise").addEventListener("click", () => {
-        playSound(successSound)
-        setIsModalOpen(true)
+      // document.getElementById("done-exercise").addEventListener("click", () => {
+      //   playSound(successSound)
+      //   setIsModalOpen(true)
         // stopRecordingAndUploadFileToFirebase()
-        runInBackgroundWithEmergencyStop()
-        setIsModalOpen(false)
-        setShowCoutdown(false)
-      })
+      //   runInBackgroundWithEmergencyStop()
+      //   setIsModalOpen(false)
+      //   setShowCoutdown(false)
+      // })
     }
   }, [loading])
 
