@@ -52,7 +52,9 @@ export const CameraRendering: React.FC = () => {
             </div>
             {!loading && <div className="p-1 absolute w-full bottom-0">
               <div className={`${!showCoutdown ? "" : "hidden"}`}>
-                <CardActionArea>
+                <CardActionArea onClick={()=>{
+                  window.location.href = "/"
+                }}>
                   <div id="done-exercise" className="border rounded-full bg-blue-600 text-white font-semibold p-1 text-center">
                     Emergency Stop
                   </div>
