@@ -370,7 +370,7 @@ export default function ElbowCurl({
         if (remainingTime <= 0) {
             if(globalStop){
                 Handle$NextDirectExercise()
-                exerciseName.current = "Arms Lock"
+                window.location.href = "/"
             }
             else
                 resume = true;
