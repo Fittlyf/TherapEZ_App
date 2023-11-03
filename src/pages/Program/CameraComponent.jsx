@@ -19,6 +19,7 @@ import playSound from "../../utils/PlaySound";
 import { Link } from "react-router-dom";
 import successSound from "../../sounds/excellent_work.wav";
 import ExerciseManager from "./ExerciseManager";
+import Man from "../../Images/man.png"
 
 let recorder;
 
@@ -312,7 +313,9 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   return (
     <center>
       <div className="App">
-
+        {/* <div className="absolute">
+          <img src={Man} className="opacity-80 flex justify-center items-center h-full"/>
+        </div> */}
         {!timer ? (
           <>
             <Webcam id="webcam" ref={webcamRef} className="hidden w-screen" />
