@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import First from "../../Images/2.png"
+import Second from "../../Images/3.png"
 import './slideshow.css'
 
-const colors = ["#0088FE", "#00C49F", "#FFBB28"];
-const content = [<>Content 1</>, <>Content 2</>, <>Content 3</>];
+const colors = ["#0088FE", "#00C49F"];
+const content = [<img src={First}/>, <img src={Second}/>];
 const delay = 2500;
 
 export default function Slideshow() {
@@ -31,14 +33,14 @@ export default function Slideshow() {
   }, [index]);
 
   return (
-    <div className="slideshow">
+    <div className="slideshow w-screen">
       <div
-        className="slideshowSlider"
+        className="slideshowSlider w-full"
         style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
       >
         {colors.map((backgroundColor, index) => (
           <div
-            className="slide h-96 w-full"
+            className="slide w-full"
             key={index}
             style={{ backgroundColor }}
           >
