@@ -14,12 +14,14 @@ import PendulumCirclesLeft from "./Exercises/PendulumCirclesLeft";
 import PendulumSidewaysLeft from "./Exercises/PendulumSidewaysLeft";
 import PendulumStraightLeft from "./Exercises/PendulumStraightLeft";
 
+import PendulumCirclesStencyl1 from "../../Images/PendulumCircles1.png"
+import PendulumCirclesStencyl2 from "../../Images/PendulumCircles2.png"
+
 import RecordRTC from 'recordrtc';
 import playSound from "../../utils/PlaySound";
 import { Link } from "react-router-dom";
 import successSound from "../../sounds/excellent_work.wav";
 import ExerciseManager from "./ExerciseManager";
-import Man from "../../Images/man.png"
 
 let recorder;
 
@@ -30,6 +32,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   const canvasRef = useRef(null);
   const StateRef = useRef(0);
   const exerciseName = useRef("")
+  const [stencyl, setStencyl] = useState(PendulumCirclesStencyl1)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false)
@@ -46,7 +49,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
       // document.getElementById("done-exercise").addEventListener("click", () => {
       //   playSound(successSound)
       //   setIsModalOpen(true)
-        // stopRecordingAndUploadFileToFirebase()
+      // stopRecordingAndUploadFileToFirebase()
       //   runInBackgroundWithEmergencyStop()
       //   setIsModalOpen(false)
       //   setShowCoutdown(false)
@@ -57,19 +60,19 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   // const runInBackground = () => {
   //   recorder.stopRecording(async () => {
   //     const blob = recorder.getBlob();
-  
+
   //     if ('serviceWorker' in navigator) {
   //       navigator.serviceWorker.getRegistration()
   //         .then((registration) => {
   //           if (registration && registration.active) {
-  
+
   //             const worker = registration.active;
   //             worker.onmessage = function (event) {
   //               if (event.data === 'done') {
   //                 console.log('Task is done');
   //               }
   //             };
-  
+
   //             worker.postMessage({
   //               blob: blob, exercise: Number(localStorage.getItem("exerciseID")),
   //               patient: localStorage.getItem("patient-ID"), authToken: localStorage.getItem(
@@ -92,19 +95,19 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   const runInBackgroundWithEmergencyStop = () => {
     recorder.stopRecording(async () => {
       const blob = recorder.getBlob();
-  
+
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistration()
           .then((registration) => {
             if (registration && registration.active) {
-  
+
               const worker = registration.active;
               worker.onmessage = function (event) {
                 if (event.data === 'done') {
                   console.log('Task is done');
                 }
               };
-  
+
               worker.postMessage({
                 blob: blob, exercise: Number(localStorage.getItem("exerciseID")),
                 patient: localStorage.getItem("patient-ID"), authToken: localStorage.getItem(
@@ -241,7 +244,8 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
           setref: setref,
           messageRef: messageRef,
           setloading: setloading,
-          exerciseName:exerciseName
+          exerciseName: exerciseName,
+          stencyl: setStencyl
         })
       } else {
         setWarning(true)
@@ -300,7 +304,6 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
     if (webcamRef.current !== "undefined" && webcamRef.current !== null) {
       camera = new cam.Camera(webcamRef.current.video, {
         onFrame: async () => {
-          console.log("Frame started")
           await pose.send({ image: webcamRef.current.video }).then(() => {
             // setloading(false)
           });
@@ -313,9 +316,11 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   return (
     <center>
       <div className="App">
-        {/* <div className="absolute">
-          <img src={Man} className="opacity-80 flex justify-center items-center h-full"/>
-        </div> */}
+        {stencyl &&
+          <div className="absolute flex w-full h-full justify-center items-center">
+            <img src={stencyl} className="opacity-80" />
+          </div>
+        }
         {!timer ? (
           <>
             <Webcam id="webcam" ref={webcamRef} className="hidden w-screen" />

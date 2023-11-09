@@ -5,6 +5,8 @@ import rep from "../../../sounds/rep.mp3"
 import pendulum_circles from "../../../sounds/pendulum_circles.wav"
 import RecordRTC from 'recordrtc';
 
+import PendulumCirclesStencyl2 from "../../../Images/PendulumCircles2.png"
+
 var globalStart = 0;
 var globalStop = 0
 
@@ -41,6 +43,7 @@ function distance3D(x1, y1, z1, x2, y2, z2) {
 }
 
 var start = 0;
+var sub_start = 0;
 var hitOn = 0;
 var reps = 0;
 var sets = 0;
@@ -114,8 +117,8 @@ const Handle$NextDirectExercise = () => {
     const individualSetReps = JSON.parse(localStorage.getItem("individualSetReps"));
 
     if (Number(localStorage.getItem("Allexerciseid")) === exerciseDetails.length) {
-      window.location.href = "/"
-      return;
+        window.location.href = "/"
+        return;
     }
 
     console.log(exerciseDetails)
@@ -124,22 +127,22 @@ const Handle$NextDirectExercise = () => {
 
 
     localStorage.setItem(
-      "sets",
-      entry ? entry.sets.toString() : "",
+        "sets",
+        entry ? entry.sets.toString() : "",
     );
     localStorage.setItem(
-      "reps",
-      entry ? entry.reps.toString() : "",
-    );
-
-    localStorage.setItem(
-      "exerciseID",
-      exerciseDetails[Number(localStorage.getItem("Allexerciseid") || "0")].id.toString()
+        "reps",
+        entry ? entry.reps.toString() : "",
     );
 
     localStorage.setItem(
-      "exercise",
-      exerciseDetails[Number(localStorage.getItem("Allexerciseid") || "0")].name
+        "exerciseID",
+        exerciseDetails[Number(localStorage.getItem("Allexerciseid") || "0")].id.toString()
+    );
+
+    localStorage.setItem(
+        "exercise",
+        exerciseDetails[Number(localStorage.getItem("Allexerciseid") || "0")].name
     );
 }
 
@@ -153,10 +156,11 @@ export default function PendulumCircles({
     repref: repref,
     setref: setref,
     setloading: setloading,
-    exerciseName: exerciseName
+    exerciseName: exerciseName,
+    stencyl: stencyl
 }) {
 
-    if(globalStart === 0){
+    if (globalStart === 0) {
         startRecording(canvasRef)
         globalStart = 1
     }
@@ -225,6 +229,7 @@ export default function PendulumCircles({
         canvasCtx.font = "30px Arial";
 
         // * Some Important points
+        const nose = results.poseLandmarks[0];
         const leftShoulder = results.poseLandmarks[11];
         const rightShoulder = results.poseLandmarks[12];
         const leftElbow = results.poseLandmarks[13];
@@ -278,21 +283,73 @@ export default function PendulumCircles({
 
         //center
         if (!start) {
-            canvasCtx.beginPath();
-            canvasCtx.strokeStyle = "#00FF00"
-            canvasCtx.lineWidth = 2;
-            canvasCtx.arc(
-                right_knee.x * canvasElement.width,
-                right_knee.y * canvasElement.height,
-                circleRadius,
-                2 * Math.PI, false
-            );
-            canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
-            canvasCtx.stroke();
+            // canvasCtx.beginPath();
+            // canvasCtx.strokeStyle = "#00FF00"
+            // canvasCtx.lineWidth = 2;
+            // canvasCtx.arc(
+            //     right_knee.x * canvasElement.width,
+            //     right_knee.y * canvasElement.height,
+            //     circleRadius,
+            //     2 * Math.PI, false
+            // );
+            // canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+            // canvasCtx.stroke();
+
+            if (sub_start === 0) {
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    0.65 * canvasElement.width,
+                    0.25 * canvasElement.height,
+                    60,
+                    2 * Math.PI, false
+                );
+                canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+                canvasCtx.stroke();
+
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    0.25 * canvasElement.width,
+                    0.55 * canvasElement.height,
+                    60,
+                    2 * Math.PI, false
+                );
+                canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+                canvasCtx.stroke();
+            } else if (sub_start === 1) {
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    0.55 * canvasElement.width,
+                    0.25 * canvasElement.height,
+                    60,
+                    2 * Math.PI, false
+                );
+                canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+                canvasCtx.stroke();
+
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    0.75 * canvasElement.width,
+                    0.60 * canvasElement.height,
+                    60,
+                    2 * Math.PI, false
+                );
+                canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+                canvasCtx.stroke();
+            }
         }
 
         let WristX = rightWrist.x * canvasElement.width;
         let WristY = rightWrist.y * canvasElement.height;
+        let HeadX = nose.x * canvasElement.width;
+        let HeadY = nose.y * canvasElement.height;
 
         let LPX =
             rightShoulder.x * canvasElement.width -
@@ -336,12 +393,51 @@ export default function PendulumCircles({
         }
 
         if (!start) {
-            if (distance(
-                right_knee.x * canvasElement.width,
-                right_knee.y * canvasElement.height,
+            console.log(distance(
+                0.75 * canvasElement.width,
+                0.60 * canvasElement.height,
                 WristX,
                 WristY
-            ) < circleRadius) {
+            ))
+
+            if (
+                sub_start === 0 &&
+                (distance(
+                    0.25 * canvasElement.width,
+                    0.55 * canvasElement.height,
+                    WristX,
+                    WristY
+                ) < circleRadius)
+                &&
+                (distance(
+                    0.65 * canvasElement.width,
+                    0.25 * canvasElement.height,
+                    HeadX,
+                    HeadY
+                ) < circleRadius)
+            ) {
+                playSound(bell)
+                sub_start = 1
+                stencyl(PendulumCirclesStencyl2)
+                // start = 1
+                // hitOn = 1
+            }
+            else if (
+                sub_start === 1 &&
+                (distance(
+                    0.75 * canvasElement.width,
+                    0.60 * canvasElement.height,
+                    WristX,
+                    WristY
+                ) < circleRadius)
+                &&
+                (distance(
+                    0.55 * canvasElement.width,
+                    0.25 * canvasElement.height,
+                    HeadX,
+                    HeadY
+                ) < circleRadius)
+            ) {
                 playSound(bell)
                 start = 1
                 hitOn = 1
@@ -406,7 +502,7 @@ export default function PendulumCircles({
         const remainingTime = resumeAt - Date.now()
 
         if (remainingTime <= 0) {
-            if(globalStop){
+            if (globalStop) {
                 Handle$NextDirectExercise()
                 exerciseName.current = "Pendulum Sideways Right"
             }
@@ -419,7 +515,7 @@ export default function PendulumCircles({
             const timerText = `${Math.ceil(remainingTime / 1000)}`;
             canvasCtx.font = "120px Arial";
             canvasCtx.fillStyle = "#00FF00"; // Green color for the timer
-            if(relaxTime === 40 * 1000)
+            if (relaxTime === 40 * 1000)
                 canvasCtx.fillText("Please Wait...", 0,
                     canvasElement.height / 4);
             canvasCtx.fillText(timerText, canvasElement.width / 2,

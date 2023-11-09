@@ -19,10 +19,10 @@ export default function ExerciseManager({
     setref: setref,
     messageRef: messageRef,
     setloading: setloading,
-    exerciseName: exerciseName
+    exerciseName: exerciseName,
+    stencyl: stencyl
 }) {
 
-    console.log(exerciseName.current)
     if (exerciseName.current === "Pendulum Circles Right") {
         PendulumCircles({
             results: results,
@@ -35,7 +35,8 @@ export default function ExerciseManager({
             setref: setref,
             messageRef: messageRef,
             setloading: setloading,
-            exerciseName: exerciseName
+            exerciseName: exerciseName,
+            stencyl: stencyl
         })
     } else if (exerciseName.current === "Pendulum Sideways Right") {
         PendulumSideways({
@@ -49,7 +50,8 @@ export default function ExerciseManager({
             setref: setref,
             messageRef: messageRef,
             setloading: setloading,
-            exerciseName: exerciseName
+            exerciseName: exerciseName,
+            stencyl: stencyl
         })
     } else if (exerciseName.current === "Pendulum Straight Right") {
         PendulumStraight({
@@ -63,7 +65,8 @@ export default function ExerciseManager({
             setref: setref,
             messageRef: messageRef,
             setloading: setloading,
-            exerciseName: exerciseName
+            exerciseName: exerciseName,
+            stencyl: stencyl
         })
     }
     else if (exerciseName.current === "Butterfly") {
@@ -78,7 +81,8 @@ export default function ExerciseManager({
             setref: setref,
             messageRef: messageRef,
             setloading: setloading,
-            exerciseName: exerciseName
+            exerciseName: exerciseName,
+            stencyl: stencyl
         })
     } else if (exerciseName.current === "Lying Arms") {
         LyingArms({
@@ -92,7 +96,8 @@ export default function ExerciseManager({
             setref: setref,
             messageRef: messageRef,
             setloading: setloading,
-            exerciseName: exerciseName
+            exerciseName: exerciseName,
+            stencyl: stencyl
         })
     } else if (exerciseName.current === "Arms Lock") {
         ArmsLock({
@@ -106,7 +111,8 @@ export default function ExerciseManager({
             setref: setref,
             messageRef: messageRef,
             setloading: setloading,
-            exerciseName: exerciseName
+            exerciseName: exerciseName,
+            stencyl: stencyl
         })
     } else if (exerciseName.current === "Pendulum Circles Left") {
         PendulumCirclesLeft({
@@ -120,7 +126,8 @@ export default function ExerciseManager({
             setref: setref,
             messageRef: messageRef,
             setloading: setloading,
-            exerciseName: exerciseName
+            exerciseName: exerciseName,
+            stencyl: stencyl
         })
     } else if (exerciseName.current === "Pendulum Sideways Left") {
         PendulumSidewaysLeft({
@@ -134,7 +141,8 @@ export default function ExerciseManager({
             setref: setref,
             messageRef: messageRef,
             setloading: setloading,
-            exerciseName: exerciseName
+            exerciseName: exerciseName,
+            stencyl: stencyl
         })
     } else if (exerciseName.current === "Pendulum Straight Left") {
         PendulumStraightLeft({
@@ -148,7 +156,8 @@ export default function ExerciseManager({
             setref: setref,
             messageRef: messageRef,
             setloading: setloading,
-            exerciseName: exerciseName
+            exerciseName: exerciseName,
+            stencyl: stencyl
         })
     }
 }
