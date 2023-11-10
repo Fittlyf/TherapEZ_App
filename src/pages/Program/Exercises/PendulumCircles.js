@@ -301,7 +301,7 @@ export default function PendulumCircles({
                 canvasCtx.lineWidth = 2;
                 canvasCtx.arc(
                     0.65 * canvasElement.width,
-                    0.25 * canvasElement.height,
+                    0.35 * canvasElement.height,
                     60,
                     2 * Math.PI, false
                 );
@@ -313,7 +313,7 @@ export default function PendulumCircles({
                 canvasCtx.lineWidth = 2;
                 canvasCtx.arc(
                     0.25 * canvasElement.width,
-                    0.55 * canvasElement.height,
+                    0.65 * canvasElement.height,
                     60,
                     2 * Math.PI, false
                 );
@@ -337,7 +337,7 @@ export default function PendulumCircles({
                 canvasCtx.lineWidth = 2;
                 canvasCtx.arc(
                     0.75 * canvasElement.width,
-                    0.60 * canvasElement.height,
+                    0.70 * canvasElement.height,
                     60,
                     2 * Math.PI, false
                 );
@@ -393,25 +393,19 @@ export default function PendulumCircles({
         }
 
         if (!start) {
-            console.log(distance(
-                0.75 * canvasElement.width,
-                0.60 * canvasElement.height,
-                WristX,
-                WristY
-            ))
 
             if (
                 sub_start === 0 &&
                 (distance(
                     0.25 * canvasElement.width,
-                    0.55 * canvasElement.height,
+                    0.65 * canvasElement.height,
                     WristX,
                     WristY
                 ) < circleRadius)
                 &&
                 (distance(
                     0.65 * canvasElement.width,
-                    0.25 * canvasElement.height,
+                    0.35 * canvasElement.height,
                     HeadX,
                     HeadY
                 ) < circleRadius)
@@ -426,14 +420,15 @@ export default function PendulumCircles({
                 sub_start === 1 &&
                 (distance(
                     0.75 * canvasElement.width,
-                    0.60 * canvasElement.height,
+                    0.70 * canvasElement.height,
                     WristX,
                     WristY
                 ) < circleRadius)
                 &&
                 (distance(
                     0.55 * canvasElement.width,
-                    0.25 * canvasElement.height,
+                    0.35 * 
+canvasElement.height,
                     HeadX,
                     HeadY
                 ) < circleRadius)

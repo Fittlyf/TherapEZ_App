@@ -317,7 +317,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
     <center>
       <div className="App">
         {stencyl &&
-          <div className="absolute flex w-full h-full justify-center items-center">
+          <div className="absolute flex w-full h-full justify-center items-end bottom-14">
             <img src={stencyl} className="opacity-80" />
           </div>
         }
