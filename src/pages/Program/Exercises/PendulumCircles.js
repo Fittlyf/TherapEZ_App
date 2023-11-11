@@ -436,6 +436,7 @@ canvasElement.height,
                 playSound(bell)
                 start = 1
                 hitOn = 1
+                stencyl(null)
             }
         }
 

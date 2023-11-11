@@ -325,7 +325,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
           <>
             <Webcam id="webcam" ref={webcamRef} className="hidden w-screen" />
             {!uploading &&
-              <canvas ref={canvasRef} className=" -ml-[100px] w-[600px] h-screen" />
+              <canvas ref={canvasRef} className=" -ml-[100px] w-screen h-screen" />
             }
           </>
         ) : (
