@@ -4,8 +4,16 @@ import { Provider } from 'react-redux';
 import axios from 'axios'; 
 import GlobalDataContext from "./Context/global"; 
 import store from "./store/index";
-import App from "./App"; // Import the main App component
+import App from "./App";
 import "./index.css"; 
+import { KeepAwake } from '@capacitor-community/keep-awake';
+
+const keepAwake = async () => {
+  console.log("Making sure the phone does not sleep")
+  await KeepAwake.keepAwake();
+};
+
+keepAwake()
 
 // Set the base URL for Axios requests
 axios.defaults.baseURL = process.env.REACT_APP_API_BASEURL;
