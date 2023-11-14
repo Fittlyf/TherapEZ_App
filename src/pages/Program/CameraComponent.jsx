@@ -317,15 +317,15 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
     <center>
       <div className="App">
         {stencyl &&
-          <div className="absolute flex w-full h-full justify-center items-end bottom-14">
-            <img src={stencyl} className="opacity-80" />
+          <div className="absolute flex w-full h-full justify-center items-center">
+            <img src={stencyl} className="opacity-80 mt-[20vh]" />
           </div>
         }
         {!timer ? (
           <>
-            <Webcam id="webcam" ref={webcamRef} className="hidden w-screen" />
+            <Webcam id="webcam" ref={webcamRef} className="hidden w-screen h-screen" />
             {!uploading &&
-              <canvas ref={canvasRef} className=" -ml-[100px] w-screen h-screen" />
+              <canvas ref={canvasRef} className="w-screen h-screen" />
             }
           </>
         ) : (

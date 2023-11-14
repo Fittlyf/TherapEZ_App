@@ -300,8 +300,10 @@ export default function PendulumCircles({
                 canvasCtx.strokeStyle = "#00FF00"
                 canvasCtx.lineWidth = 2;
                 canvasCtx.arc(
-                    0.65 * canvasElement.width,
-                    0.35 * canvasElement.height,
+                    // 0.65 * 
+                    (canvasElement.width/2) + (canvasElement.width*0.25),
+                    // 0.35 * 
+                    (canvasElement.height/2) - (canvasElement.height*0.15),
                     60,
                     2 * Math.PI, false
                 );
@@ -312,8 +314,10 @@ export default function PendulumCircles({
                 canvasCtx.strokeStyle = "#00FF00"
                 canvasCtx.lineWidth = 2;
                 canvasCtx.arc(
-                    0.25 * canvasElement.width,
-                    0.65 * canvasElement.height,
+                    // 0.25 *
+                    (canvasElement.width/2) - (canvasElement.width*0.40),
+                    // 0.65 * 
+                    (canvasElement.height/2) + (canvasElement.height*0.15),
                     60,
                     2 * Math.PI, false
                 );
@@ -324,8 +328,10 @@ export default function PendulumCircles({
                 canvasCtx.strokeStyle = "#00FF00"
                 canvasCtx.lineWidth = 2;
                 canvasCtx.arc(
-                    0.55 * canvasElement.width,
-                    0.25 * canvasElement.height,
+                    // 0.55 * 
+                    (canvasElement.width/2) + (canvasElement.width*0.05),
+                    // 0.25 * 
+                    (canvasElement.height/2) - (canvasElement.height*0.15),
                     60,
                     2 * Math.PI, false
                 );
@@ -336,8 +342,10 @@ export default function PendulumCircles({
                 canvasCtx.strokeStyle = "#00FF00"
                 canvasCtx.lineWidth = 2;
                 canvasCtx.arc(
-                    0.75 * canvasElement.width,
-                    0.70 * canvasElement.height,
+                    // 0.75 * 
+                    (canvasElement.width/2) + (canvasElement.width*0.35),
+                    // 0.70 * 
+                    (canvasElement.height/2) + (canvasElement.height*0.20),
                     60,
                     2 * Math.PI, false
                 );
@@ -397,15 +405,15 @@ export default function PendulumCircles({
             if (
                 sub_start === 0 &&
                 (distance(
-                    0.25 * canvasElement.width,
-                    0.65 * canvasElement.height,
+                    (canvasElement.width/2) - (canvasElement.width*0.40),
+                    (canvasElement.height/2) + (canvasElement.height*0.15),
                     WristX,
                     WristY
                 ) < circleRadius)
                 &&
                 (distance(
-                    0.65 * canvasElement.width,
-                    0.35 * canvasElement.height,
+                    (canvasElement.width/2) + (canvasElement.width*0.25),
+                    (canvasElement.height/2) - (canvasElement.height*0.15),
                     HeadX,
                     HeadY
                 ) < circleRadius)
@@ -419,16 +427,15 @@ export default function PendulumCircles({
             else if (
                 sub_start === 1 &&
                 (distance(
-                    0.75 * canvasElement.width,
-                    0.70 * canvasElement.height,
+                    (canvasElement.width/2) + (canvasElement.width*0.35),
+                    (canvasElement.height/2) + (canvasElement.height*0.20),
                     WristX,
                     WristY
                 ) < circleRadius)
                 &&
                 (distance(
-                    0.55 * canvasElement.width,
-                    0.35 * 
-canvasElement.height,
+                    (canvasElement.width/2) + (canvasElement.width*0.05),
+                    (canvasElement.height/2) - (canvasElement.height*0.15),
                     HeadX,
                     HeadY
                 ) < circleRadius)
