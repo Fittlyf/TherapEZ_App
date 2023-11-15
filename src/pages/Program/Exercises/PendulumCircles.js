@@ -5,6 +5,7 @@ import rep from "../../../sounds/rep.mp3"
 import pendulum_circles from "../../../sounds/pendulum_circles.wav"
 import RecordRTC from 'recordrtc';
 
+import PendulumCirclesStencyl1 from "../../../Images/PendulumCircles1.png"
 import PendulumCirclesStencyl2 from "../../../Images/PendulumCircles2.png"
 
 var globalStart = 0;
@@ -161,6 +162,7 @@ export default function PendulumCircles({
 }) {
 
     if (globalStart === 0) {
+        stencyl(PendulumCirclesStencyl1)
         startRecording(canvasRef)
         globalStart = 1
     }

@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import First from "../../Images/2.png"
-import Second from "../../Images/3.png"
+import First from "../../Images/slideshow_1.gif"
+import Second from "../../Images/slideshow_2.gif"
+import Third from "../../Images/slideshow_3.jpeg"
+import Fourth from "../../Images/slideshow_4.jpeg"
+
 import './slideshow.css'
 
-const colors = ["#0088FE", "#00C49F"];
-const content = [<img src={First}/>, <img src={Second}/>];
-const delay = 2500;
+const colors = ["#0088FE", "#00C49F", "#0088FE", "#00C49F"];
+const content = [<img src={First} />, <img src={Second} />, <img src={Third} />, <img src={Fourth} />];
+const delay = 5000;
 
 export default function Slideshow() {
   const [index, setIndex] = useState(0);
@@ -35,16 +38,17 @@ export default function Slideshow() {
   return (
     <div className="slideshow w-screen">
       <div
-        className="slideshowSlider w-full"
+        className="slideshowSlider w-full h-full"
         style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
       >
         {colors.map((backgroundColor, index) => (
           <div
-            className="slide w-full"
+            className="slide w-full h-full"
             key={index}
-            style={{ backgroundColor }}
           >
-            {content[index]}
+            <div className="w-full flex justify-center h-[500px]">
+              {content[index]}
+            </div>
           </div>
         ))}
       </div>

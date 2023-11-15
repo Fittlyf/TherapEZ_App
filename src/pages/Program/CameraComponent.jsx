@@ -32,7 +32,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   const canvasRef = useRef(null);
   const StateRef = useRef(0);
   const exerciseName = useRef("")
-  const [stencyl, setStencyl] = useState(PendulumCirclesStencyl1)
+  const [stencyl, setStencyl] = useState(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false)
