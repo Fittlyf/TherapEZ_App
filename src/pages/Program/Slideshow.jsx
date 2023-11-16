@@ -8,9 +8,9 @@ import './slideshow.css'
 
 const colors = ["#0088FE", "#00C49F", "#0088FE", "#00C49F"];
 const content = [<img src={First} />, <img src={Second} />, <img src={Third} />, <img src={Fourth} />];
-const delay = 5000;
+const delay = 6000;
 
-export default function Slideshow() {
+export default function Slideshow({ setCarouselShown }) {
   const [index, setIndex] = useState(0);
   const timeoutRef = useRef(null);
 
@@ -23,10 +23,19 @@ export default function Slideshow() {
   useEffect(() => {
     resetTimeout();
     timeoutRef.current = setTimeout(
-      () =>
-        setIndex((prevIndex) =>
-          prevIndex === colors.length - 1 ? 0 : prevIndex + 1
-        ),
+      () => {
+        setIndex((prevIndex) => {
+          // Check if prevIndex is at the end of the colors array
+          if (prevIndex === colors.length - 1) {
+            // If yes, set rotation to 1
+            setCarouselShown(true);
+            return 0;
+          } else {
+            // If not, increment the index
+            return prevIndex + 1;
+          }
+        });
+      },
       delay
     );
 

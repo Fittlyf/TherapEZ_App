@@ -15,7 +15,7 @@ const config: CapacitorConfig = {
     }
   },
   server: {
-    url:"https://therapezweb.fittlyf.com",
+    url:"https://therapezwebtest.fittlyf.com",
     androidScheme: "https"
   }
 };

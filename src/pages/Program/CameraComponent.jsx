@@ -26,7 +26,7 @@ import ExerciseManager from "./ExerciseManager";
 let recorder;
 
 
-function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, setWarning, repref, setref, messageRef }) {
+function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, setWarning, repref, setref, messageRef, carsouselShown }) {
   // * Refs
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
