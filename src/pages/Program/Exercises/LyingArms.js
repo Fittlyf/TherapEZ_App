@@ -33,7 +33,7 @@ var hitOn = "lower";
 var reps = 0;
 var resume = true
 var resumeAt;
-var relaxTime = 20 * 1000
+var relaxTime = 5 * 1000
 
 let recorder;
 
@@ -198,7 +198,7 @@ export default function ElbowCurl({
             runInBackground()
             // wait for 40 seconds
             resume = false
-            relaxTime = 40 * 1000
+            relaxTime = 10 * 1000
             resumeAt = Date.now() + relaxTime
             globalStop = 1
             // setShowCoutdown(true)
@@ -305,7 +305,7 @@ export default function ElbowCurl({
             canvasCtx.beginPath();
             canvasCtx.strokeStyle = hitOn === "lower" ? "#00ff00" : "#000000";
             canvasCtx.lineWidth = 2;
-            canvasCtx.arc(LPX, LPY, 100, 2 * Math.PI, false);
+            canvasCtx.arc(LPX, LPY, 60, 2 * Math.PI, false);
             canvasCtx.stroke();
 
             if (
@@ -314,7 +314,7 @@ export default function ElbowCurl({
                     LPY,
                     leftWrist.x * canvasElement.width,
                     leftWrist.y * canvasElement.height
-                ) < 100
+                ) < 60
             ) {
                 if (hitOn === "lower") {
                     playSound(rep)
@@ -381,7 +381,7 @@ export default function ElbowCurl({
             const timerText = `${Math.ceil(remainingTime / 1000)}`;
             canvasCtx.font = "120px Arial";
             canvasCtx.fillStyle = "#00FF00"; // Green color for the timer
-            if(relaxTime === 40 * 1000)
+            if(relaxTime === 10 * 1000)
                 canvasCtx.fillText("Please Wait...", 0,
                     canvasElement.height / 4);
             canvasCtx.fillText(timerText, canvasElement.width / 2,

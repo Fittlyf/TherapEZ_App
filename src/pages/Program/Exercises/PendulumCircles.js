@@ -15,7 +15,7 @@ var sets = 0;
 var playInitVoice = true
 var resume = true
 var resumeAt;
-var relaxTime = 20 * 1000
+var relaxTime = 5 * 1000
 
 const connectingPoints = [
     [12, 14],
@@ -212,7 +212,7 @@ export default function PendulumCircles({
             runInBackground()
             // wait for 40 seconds
             resume = false
-            relaxTime = 40 * 1000
+            relaxTime = 10 * 1000
             resumeAt = Date.now() + relaxTime
             globalStop = 1
             // setShowCoutdown(true)
@@ -303,9 +303,9 @@ export default function PendulumCircles({
                 canvasCtx.lineWidth = 2;
                 canvasCtx.arc(
                     // 0.65 * 
-                    (canvasElement.width/2) + (canvasElement.width*0.25),
+                    (canvasElement.width / 2) + (canvasElement.width * 0.25),
                     // 0.35 * 
-                    (canvasElement.height/2) - (canvasElement.height*0.15),
+                    (canvasElement.height / 2) - (canvasElement.height * 0.15),
                     60,
                     2 * Math.PI, false
                 );
@@ -317,9 +317,9 @@ export default function PendulumCircles({
                 canvasCtx.lineWidth = 2;
                 canvasCtx.arc(
                     // 0.25 *
-                    (canvasElement.width/2) - (canvasElement.width*0.40),
+                    (canvasElement.width / 2) - (canvasElement.width * 0.40),
                     // 0.65 * 
-                    (canvasElement.height/2) + (canvasElement.height*0.15),
+                    (canvasElement.height / 2) + (canvasElement.height * 0.15),
                     60,
                     2 * Math.PI, false
                 );
@@ -331,9 +331,9 @@ export default function PendulumCircles({
                 canvasCtx.lineWidth = 2;
                 canvasCtx.arc(
                     // 0.55 * 
-                    (canvasElement.width/2) + (canvasElement.width*0.05),
+                    (canvasElement.width / 2) + (canvasElement.width * 0.05),
                     // 0.25 * 
-                    (canvasElement.height/2) - (canvasElement.height*0.15),
+                    (canvasElement.height / 2) - (canvasElement.height * 0.15),
                     60,
                     2 * Math.PI, false
                 );
@@ -345,9 +345,9 @@ export default function PendulumCircles({
                 canvasCtx.lineWidth = 2;
                 canvasCtx.arc(
                     // 0.75 * 
-                    (canvasElement.width/2) + (canvasElement.width*0.35),
+                    (canvasElement.width / 2) + (canvasElement.width * 0.35),
                     // 0.70 * 
-                    (canvasElement.height/2) + (canvasElement.height*0.20),
+                    (canvasElement.height / 2) + (canvasElement.height * 0.20),
                     60,
                     2 * Math.PI, false
                 );
@@ -407,15 +407,15 @@ export default function PendulumCircles({
             if (
                 sub_start === 0 &&
                 (distance(
-                    (canvasElement.width/2) - (canvasElement.width*0.40),
-                    (canvasElement.height/2) + (canvasElement.height*0.15),
+                    (canvasElement.width / 2) - (canvasElement.width * 0.40),
+                    (canvasElement.height / 2) + (canvasElement.height * 0.15),
                     WristX,
                     WristY
                 ) < circleRadius)
                 &&
                 (distance(
-                    (canvasElement.width/2) + (canvasElement.width*0.25),
-                    (canvasElement.height/2) - (canvasElement.height*0.15),
+                    (canvasElement.width / 2) + (canvasElement.width * 0.25),
+                    (canvasElement.height / 2) - (canvasElement.height * 0.15),
                     HeadX,
                     HeadY
                 ) < circleRadius)
@@ -429,15 +429,15 @@ export default function PendulumCircles({
             else if (
                 sub_start === 1 &&
                 (distance(
-                    (canvasElement.width/2) + (canvasElement.width*0.35),
-                    (canvasElement.height/2) + (canvasElement.height*0.20),
+                    (canvasElement.width / 2) + (canvasElement.width * 0.35),
+                    (canvasElement.height / 2) + (canvasElement.height * 0.20),
                     WristX,
                     WristY
                 ) < circleRadius)
                 &&
                 (distance(
-                    (canvasElement.width/2) + (canvasElement.width*0.05),
-                    (canvasElement.height/2) - (canvasElement.height*0.15),
+                    (canvasElement.width / 2) + (canvasElement.width * 0.05),
+                    (canvasElement.height / 2) - (canvasElement.height * 0.15),
                     HeadX,
                     HeadY
                 ) < circleRadius)
@@ -520,7 +520,7 @@ export default function PendulumCircles({
             const timerText = `${Math.ceil(remainingTime / 1000)}`;
             canvasCtx.font = "120px Arial";
             canvasCtx.fillStyle = "#00FF00"; // Green color for the timer
-            if (relaxTime === 40 * 1000)
+            if (relaxTime === 10 * 1000)
                 canvasCtx.fillText("Please Wait...", 0,
                     canvasElement.height / 4);
             canvasCtx.fillText(timerText, canvasElement.width / 2,

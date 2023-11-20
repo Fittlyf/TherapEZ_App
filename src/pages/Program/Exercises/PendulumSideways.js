@@ -12,7 +12,7 @@ var sets = 0;
 var playInitVoice = true
 var resume = true
 var resumeAt;
-var relaxTime = 20 * 1000
+var relaxTime = 5 * 1000
 
 const connectingPoints = [
     [12, 14],
@@ -210,7 +210,7 @@ export default function PendulumSideways({
             runInBackground()
             // wait for 40 seconds
             resume = false
-            relaxTime = 40 * 1000
+            relaxTime = 10 * 1000
             resumeAt = Date.now() + relaxTime
             globalStop = 1
             // setShowCoutdown(true)
@@ -421,7 +421,7 @@ export default function PendulumSideways({
             const timerText = `${Math.ceil(remainingTime / 1000)}`;
             canvasCtx.font = "120px Arial";
             canvasCtx.fillStyle = "#00FF00"; // Green color for the timer
-            if(relaxTime === 40 * 1000)
+            if(relaxTime === 10 * 1000)
                 canvasCtx.fillText("Please Wait...", 0,
                     canvasElement.height / 4);
             canvasCtx.fillText(timerText, canvasElement.width / 2,

@@ -52,7 +52,7 @@ const prep = localStorage.getItem("reps")
 
 var resume = true
 var resumeAt;
-var relaxTime = 20 * 1000
+var relaxTime = 5 * 1000
 
 let eltime = 0;
 const IntervalForCountingTimesElapsed = () => {
@@ -369,7 +369,7 @@ export default function ArmsLock({
             const timerText = `${Math.ceil(remainingTime / 1000)}`;
             canvasCtx.font = "120px Arial";
             canvasCtx.fillStyle = "#00FF00"; // Green color for the timer
-            if(relaxTime === 40 * 1000)
+            if(relaxTime === 10 * 1000)
                 canvasCtx.fillText("Please Wait...", 0,
                     canvasElement.height / 4);
             canvasCtx.fillText(timerText, canvasElement.width / 2,
