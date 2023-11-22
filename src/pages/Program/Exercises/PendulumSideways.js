@@ -5,6 +5,10 @@ import rep from "../../../sounds/rep.mp3"
 import pendulum_sideways from "../../../sounds/pendulum_sideways.wav"
 import RecordRTC from 'recordrtc';
 
+import PendulumSidewaysStencyl1 from "../../../Images/PendulumSideways1.png"
+import PendulumSidewaysStencyl2 from "../../../Images/PendulumSIdeways2.png"
+
+
 var globalStart = 0;
 var globalStop = 0
 
@@ -41,6 +45,7 @@ function distance3D(x1, y1, z1, x2, y2, z2) {
 }
 
 var start = 0;
+var sub_start = 0;
 var hitOn = 0;
 var reps = 0;
 var sets = 0;
@@ -154,10 +159,12 @@ export default function PendulumSideways({
     repref: repref,
     setref: setref,
     setloading: setloading,
-    exerciseName: exerciseName
+    exerciseName: exerciseName,
+    stencyl: stencyl
 }) {
 
     if(globalStart === 0){
+        stencyl(PendulumSidewaysStencyl1)
         startRecording(canvasRef)
         globalStart = 1
     }
@@ -226,6 +233,7 @@ export default function PendulumSideways({
         canvasCtx.font = "30px Arial";
 
         // * Some Important points
+        const nose = results.poseLandmarks[0];
         const leftShoulder = results.poseLandmarks[11];
         const rightShoulder = results.poseLandmarks[12];
         const leftElbow = results.poseLandmarks[13];
@@ -279,21 +287,82 @@ export default function PendulumSideways({
 
         //center
         if (!start) {
-            canvasCtx.beginPath();
-            canvasCtx.strokeStyle = "#00FF00"
-            canvasCtx.lineWidth = 2;
-            canvasCtx.arc(
-                right_knee.x * canvasElement.width,
-                right_knee.y * canvasElement.height,
-                circleRadius,
-                2 * Math.PI, false
-            );
-            canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
-            canvasCtx.stroke();
+            // canvasCtx.beginPath();
+            // canvasCtx.strokeStyle = "#00FF00"
+            // canvasCtx.lineWidth = 2;
+            // canvasCtx.arc(
+            //     right_knee.x * canvasElement.width,
+            //     right_knee.y * canvasElement.height,
+            //     circleRadius,
+            //     2 * Math.PI, false
+            // );
+            // canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+            // canvasCtx.stroke();
+
+            if (sub_start === 0) {
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    // 0.65 * 
+                    (canvasElement.width / 2) + (canvasElement.width * 0.25),
+                    // 0.35 * 
+                    (canvasElement.height / 2) - (canvasElement.height * 0.15),
+                    60,
+                    2 * Math.PI, false
+                );
+                canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+                canvasCtx.stroke();
+
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    // 0.25 *
+                    (canvasElement.width / 2) - (canvasElement.width * 0.40),
+                    // 0.65 * 
+                    (canvasElement.height / 2) + (canvasElement.height * 0.15),
+                    60,
+                    2 * Math.PI, false
+                );
+                canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+                canvasCtx.stroke();
+            } else if (sub_start === 1) {
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    // 0.55 * 
+                    (canvasElement.width / 2) - (canvasElement.width * 0.03),
+                    // 0.25 * 
+                    (canvasElement.height / 2) - (canvasElement.height * 0.15),
+                    60,
+                    2 * Math.PI, false
+                );
+                canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+                canvasCtx.stroke();
+
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    // 0.75 * 
+                    (canvasElement.width / 2) + (canvasElement.width * 0.35),
+                    // 0.70 * 
+                    (canvasElement.height / 2) + (canvasElement.height * 0.15),
+                    60,
+                    2 * Math.PI, false
+                );
+                canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+                canvasCtx.stroke();
+            }
         }
+
 
         let WristX = rightWrist.x * canvasElement.width;
         let WristY = rightWrist.y * canvasElement.height;
+        let HeadX = nose.x * canvasElement.width;
+        let HeadY = nose.y * canvasElement.height;
 
         let LPX =
             rightShoulder.x * canvasElement.width -
@@ -338,15 +407,49 @@ export default function PendulumSideways({
         }
 
         if (!start) {
-            if (distance(
-                right_knee.x * canvasElement.width,
-                right_knee.y * canvasElement.height,
-                WristX,
-                WristY
-            ) < circleRadius) {
+
+            if (
+                sub_start === 0 &&
+                (distance(
+                    (canvasElement.width / 2) - (canvasElement.width * 0.40),
+                    (canvasElement.height / 2) + (canvasElement.height * 0.15),
+                    WristX,
+                    WristY
+                ) < circleRadius)
+                &&
+                (distance(
+                    (canvasElement.width / 2) + (canvasElement.width * 0.25),
+                    (canvasElement.height / 2) - (canvasElement.height * 0.15),
+                    HeadX,
+                    HeadY
+                ) < circleRadius)
+            ) {
+                playSound(bell)
+                sub_start = 1
+                stencyl(PendulumSidewaysStencyl2)
+                // start = 1
+                // hitOn = 1
+            }
+            else if (
+                sub_start === 1 &&
+                (distance(
+                    (canvasElement.width / 2) + (canvasElement.width * 0.35),
+                    (canvasElement.height / 2) + (canvasElement.height * 0.15),
+                    WristX,
+                    WristY
+                ) < circleRadius)
+                &&
+                (distance(
+                    (canvasElement.width / 2) - (canvasElement.width * 0.03),
+                    (canvasElement.height / 2) - (canvasElement.height * 0.15),
+                    HeadX,
+                    HeadY
+                ) < circleRadius)
+            ) {
                 playSound(bell)
                 start = 1
                 hitOn = 1
+                stencyl(null)
             }
         }
 
