@@ -3,11 +3,12 @@ import First from "../../Images/slideshow_1.gif"
 import Second from "../../Images/slideshow_2.gif"
 import Third from "../../Images/slideshow_3.jpeg"
 import Fourth from "../../Images/slideshow_4.jpeg"
+import Five from "../../Images/slideshow_5.gif"
 
 import './slideshow.css'
 
-const colors = ["#0088FE", "#00C49F", "#0088FE", "#00C49F"];
-const content = [<img src={First} />, <img src={Second} />, <img src={Third} />, <img src={Fourth} />];
+const colors = ["#0088FE", "#00C49F", "#0088FE", "#00C49F", "#0088FE"];
+const content = [<img src={First} />, <img src={Second} />, <img src={Third} />, <img src={Fourth} />, <img src={Five} />];
 const delay = 6000;
 
 export default function Slideshow({ setCarouselShown }) {
