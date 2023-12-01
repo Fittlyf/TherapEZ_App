@@ -5,6 +5,9 @@ import butterfly from "../../../sounds/butterfly.wav"
 import rep from "../../../sounds/rep.mp3"
 import RecordRTC from 'recordrtc';
 
+import PendulumCirclesStencyl1 from "../../../Images/Butterfly1.png"
+import PendulumCirclesStencyl2 from "../../../Images/Butterfly2.png"
+
 var globalStart = 0;
 var globalStop = 0
 
@@ -37,6 +40,7 @@ function distance3D(x1, y1, z1, x2, y2, z2) {
     return dist;
 }
 var playInitVoice = true
+var sub_start = 0;
 var start = 0;
 var hitOn = 0;
 var reps = 0;
@@ -157,10 +161,12 @@ export default function Butterfly({
     setref: setref,
     messageRef: messageRef,
     setloading: setloading,
-    exerciseName: exerciseName
+    exerciseName: exerciseName,
+    stencyl: stencyl
 }) {
 
     if (globalStart === 0) {
+        stencyl(PendulumCirclesStencyl1)
         startRecording(canvasRef)
         globalStart = 1
     }
@@ -272,55 +278,189 @@ export default function Butterfly({
 
         // console.log('r', anglebetweenrersrsl)
 
-        //reference point
-        if (start === 0) {
-            canvasCtx.beginPath();
-            canvasCtx.strokeStyle = "#00FF00"
-            canvasCtx.lineWidth = 2;
-            canvasCtx.arc(
-                (rightShoulder.x * canvasElement.width),
-                (rightEar.y * canvasElement.height),
-                50,
-                2 * Math.PI, false
-            );
-            canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
-            canvasCtx.stroke();
+        //center
+        if (!start) {
+            // canvasCtx.beginPath();
+            // canvasCtx.strokeStyle = "#00FF00"
+            // canvasCtx.lineWidth = 2;
+            // canvasCtx.arc(
+            //     right_knee.x * canvasElement.width,
+            //     right_knee.y * canvasElement.height,
+            //     circleRadius,
+            //     2 * Math.PI, false
+            // );
+            // canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+            // canvasCtx.stroke();
 
-            canvasCtx.beginPath();
-            canvasCtx.strokeStyle = "#00FF00"
-            canvasCtx.lineWidth = 2;
-            canvasCtx.arc(
-                (leftShoulder.x * canvasElement.width),
-                (leftEar.y * canvasElement.height),
-                50,
-                2 * Math.PI, false
-            );
-            canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
-            canvasCtx.stroke();
+            if (sub_start === 0) {
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    // 0.65 * 
+                    (canvasElement.width / 2) + (canvasElement.width * 0.15),
+                    // 0.35 * 
+                    (canvasElement.height / 2) - (canvasElement.height * 0.15),
+                    60,
+                    2 * Math.PI, false
+                );
+                canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+                canvasCtx.stroke();
+
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    // 0.65 * 
+                    (canvasElement.width / 2) - (canvasElement.width * 0.15),
+                    // 0.35 * 
+                    (canvasElement.height / 2) - (canvasElement.height * 0.15),
+                    60,
+                    2 * Math.PI, false
+                );
+                canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+                canvasCtx.stroke();
+            } else if (sub_start === 1) {
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    // 0.65 * 
+                    (canvasElement.width / 2) + (canvasElement.width * 0.35),
+                    // 0.35 * 
+                    (canvasElement.height / 2) - (canvasElement.height * 0.15),
+                    60,
+                    2 * Math.PI, false
+                );
+                canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+                canvasCtx.stroke();
+
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    // 0.65 * 
+                    (canvasElement.width / 2) - (canvasElement.width * 0.35),
+                    // 0.35 * 
+                    (canvasElement.height / 2) - (canvasElement.height * 0.15),
+                    60,
+                    2 * Math.PI, false
+                );
+                canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+                canvasCtx.stroke();
+            }
         }
 
+        //reference point
+        // if (!start) {
+        //     canvasCtx.beginPath();
+        //     canvasCtx.strokeStyle = "#00FF00"
+        //     canvasCtx.lineWidth = 2;
+        //     canvasCtx.arc(
+        //         (rightShoulder.x * canvasElement.width),
+        //         (rightEar.y * canvasElement.height),
+        //         50,
+        //         2 * Math.PI, false
+        //     );
+        //     canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+        //     canvasCtx.stroke();
 
+        //     canvasCtx.beginPath();
+        //     canvasCtx.strokeStyle = "#00FF00"
+        //     canvasCtx.lineWidth = 2;
+        //     canvasCtx.arc(
+        //         (leftShoulder.x * canvasElement.width),
+        //         (leftEar.y * canvasElement.height),
+        //         50,
+        //         2 * Math.PI, false
+        //     );
+        //     canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+        //     canvasCtx.stroke();
+        // }
 
-        if (start === 0) {
-            if
-                (
+        // if (start === 0) {
+        //     if
+        //         (
+        //         (
+        //             distance(
+        //                 leftElbow.x * canvasElement.width, leftElbow.y * canvasElement.height,
+        //                 leftShoulder.x * canvasElement.width, leftEar.y * canvasElement.height
+        //             ) < 100
+        //         )
+        //         &&
+        //         (
+        //             distance(
+        //                 rightElbow.x * canvasElement.width, rightElbow.y * canvasElement.height,
+        //                 rightShoulder.x * canvasElement.width, rightEar.y * canvasElement.height
+        //             ) < 100
+        //         )
+        //     ) {
+        //         playSound(bell)
+        //         start = 1
+        //         message = 'Push Back'
+        //     }
+        // }
+
+        if (!start) {
+
+            if (
+                sub_start === 0 &&
                 (
                     distance(
-                        leftElbow.x * canvasElement.width, leftElbow.y * canvasElement.height,
-                        leftShoulder.x * canvasElement.width, leftEar.y * canvasElement.height
-                    ) < 100
+                        // 0.65 * 
+                        (canvasElement.width / 2) + (canvasElement.width * 0.15),
+                        // 0.35 * 
+                        (canvasElement.height / 2) - (canvasElement.height * 0.15),
+                        leftElbow.x * canvasElement.width,
+                        leftElbow.y * canvasElement.height
+                    ) < 60
                 )
                 &&
                 (
                     distance(
-                        rightElbow.x * canvasElement.width, rightElbow.y * canvasElement.height,
-                        rightShoulder.x * canvasElement.width, rightEar.y * canvasElement.height
-                    ) < 100
+                        // 0.65 * 
+                        (canvasElement.width / 2) - (canvasElement.width * 0.15),
+                        // 0.35 * 
+                        (canvasElement.height / 2) - (canvasElement.height * 0.15),
+                        rightElbow.x * canvasElement.width,
+                        rightElbow.y * canvasElement.height
+                    ) < 60
+                )
+            ) {
+                playSound(bell)
+                sub_start = 1
+                stencyl(PendulumCirclesStencyl2)
+                // start = 1
+                // hitOn = 1
+            }
+            else if (
+                sub_start === 1 &&
+                (
+                    distance(
+                        // 0.65 * 
+                        (canvasElement.width / 2) + (canvasElement.width * 0.35),
+                        // 0.35 * 
+                        (canvasElement.height / 2) - (canvasElement.height * 0.15),
+                        leftElbow.x * canvasElement.width,
+                        leftElbow.y * canvasElement.height
+                    ) < 60
+                )
+                &&
+                (
+                    distance(
+                        // 0.65 * 
+                        (canvasElement.width / 2) - (canvasElement.width * 0.35),
+                        // 0.35 * 
+                        (canvasElement.height / 2) - (canvasElement.height * 0.15),
+                        rightElbow.x * canvasElement.width,
+                        rightElbow.y * canvasElement.height
+                    ) < 60
                 )
             ) {
                 playSound(bell)
                 start = 1
-                message = 'Push Back'
+                hitOn = 1
+                stencyl(null)
             }
         }
 
@@ -391,7 +531,7 @@ export default function Butterfly({
             const timerText = `${Math.ceil(remainingTime / 1000)}`;
             canvasCtx.font = "120px Arial";
             canvasCtx.fillStyle = "#00FF00"; // Green color for the timer
-            if(relaxTime === 10 * 1000)
+            if (relaxTime === 10 * 1000)
                 canvasCtx.fillText("Please Wait...", 0,
                     canvasElement.height / 4);
             canvasCtx.fillText(timerText, canvasElement.width / 2,

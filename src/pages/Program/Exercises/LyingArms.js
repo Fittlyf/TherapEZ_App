@@ -1,8 +1,12 @@
 import { connectPoint, drawPointOnCanvas } from "./PoseFunctions";
 import playSound from "../../../utils/PlaySound"
 import lying_arms from "../../../sounds/lying_arms.wav"
+import bell from "../../../sounds/bell.wav"
 import rep from "../../../sounds/rep.mp3"
 import RecordRTC from 'recordrtc';
+
+import PendulumCirclesStencyl1 from "../../../Images/LyingArms1.png"
+import PendulumCirclesStencyl2 from "../../../Images/LyingArms2.png"
 
 var globalStart = 0;
 var globalStop = 0
@@ -29,6 +33,8 @@ function distance(x1, y1, x2, y2) {
     return dist;
 }
 
+var start = 0;
+var sub_start = 0;
 var hitOn = "lower";
 var reps = 0;
 var resume = true
@@ -144,10 +150,12 @@ export default function ElbowCurl({
     repref: repref,
     setref: setref,
     setloading: setloading,
-    exerciseName: exerciseName
+    exerciseName: exerciseName,
+    stencyl: stencyl
 }) {
 
     if(globalStart === 0){
+        stencyl(PendulumCirclesStencyl1)
         startRecording(canvasRef)
         globalStart = 1
     }
@@ -212,6 +220,7 @@ export default function ElbowCurl({
         }
 
         // * Some Important points
+        const nose = results.poseLandmarks[0];
         const leftShoulder = results.poseLandmarks[11];
         const rightShoulder = results.poseLandmarks[12];
         const rightHip = results.poseLandmarks[24];
@@ -285,9 +294,140 @@ export default function ElbowCurl({
             )
         );
 
-        // ! is starting point reached (buffer = 40deg)
+        let WristX = rightWrist.x * canvasElement.width;
+        let WristY = rightWrist.y * canvasElement.height;
+        let HeadX = nose.x * canvasElement.width;
+        let HeadY = nose.y * canvasElement.height;
 
-        {
+        //center
+        if (!start) {
+            // canvasCtx.beginPath();
+            // canvasCtx.strokeStyle = "#00FF00"
+            // canvasCtx.lineWidth = 2;
+            // canvasCtx.arc(
+            //     right_knee.x * canvasElement.width,
+            //     right_knee.y * canvasElement.height,
+            //     circleRadius,
+            //     2 * Math.PI, false
+            // );
+            // canvasCtx.fillText(hitOn, right_knee.x * canvasElement.width, right_knee.y * canvasElement.height);
+            // canvasCtx.stroke();
+
+            if (sub_start === 0) {
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    // 0.65 * 
+                    (canvasElement.width / 2) + (canvasElement.width * 0.0),
+                    // 0.35 * 
+                    (canvasElement.height / 2) - (canvasElement.height * 0.25),
+                    60,
+                    2 * Math.PI, false
+                );
+                
+                canvasCtx.stroke();
+
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    // 0.65 * 
+                    (canvasElement.width / 2) + (canvasElement.width * 0.0),
+                    // 0.35 * 
+                    (canvasElement.height / 2) + (canvasElement.height * 0.0),
+                    60,
+                    2 * Math.PI, false
+                );
+                
+                canvasCtx.stroke();
+            } else if (sub_start === 1) {
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    // 0.65 * 
+                    (canvasElement.width / 2) + (canvasElement.width * 0.0),
+                    // 0.35 * 
+                    (canvasElement.height / 2) - (canvasElement.height * 0.1),
+                    60,
+                    2 * Math.PI, false
+                );
+                
+                canvasCtx.stroke();
+
+                canvasCtx.beginPath();
+                canvasCtx.strokeStyle = "#00FF00"
+                canvasCtx.lineWidth = 2;
+                canvasCtx.arc(
+                    // 0.65 * 
+                    (canvasElement.width / 2) + (canvasElement.width * 0.0),
+                    // 0.35 * 
+                    (canvasElement.height / 2) - (canvasElement.height * 0.3),
+                    60,
+                    2 * Math.PI, false
+                );
+                
+                canvasCtx.stroke();
+            }
+        }
+
+        if (!start) {
+
+            if (
+                sub_start === 0 &&
+                (distance(
+                    // 0.65 * 
+                    (canvasElement.width / 2) + (canvasElement.width * 0.0),
+                    // 0.35 * 
+                    (canvasElement.height / 2) + (canvasElement.height * 0.0),
+                    WristX,
+                    WristY
+                ) < 60)
+                &&
+                (distance(
+                    // 0.65 * 
+                    (canvasElement.width / 2) + (canvasElement.width * 0.0),
+                    // 0.35 * 
+                    (canvasElement.height / 2) - (canvasElement.height * 0.25),
+                    HeadX,
+                    HeadY
+                ) < 60)
+            ) {
+                playSound(bell)
+                sub_start = 1
+                stencyl(PendulumCirclesStencyl2)
+                // start = 1
+                // hitOn = 1
+            }
+            else if (
+                sub_start === 1 &&
+                (distance(
+                    // 0.65 * 
+                    (canvasElement.width / 2) + (canvasElement.width * 0.0),
+                    // 0.35 * 
+                    (canvasElement.height / 2) - (canvasElement.height * 0.3),
+                    WristX,
+                    WristY
+                ) < 60)
+                &&
+                (distance(
+                    // 0.65 * 
+                    (canvasElement.width / 2) + (canvasElement.width * 0.0),
+                    // 0.35 * 
+                    (canvasElement.height / 2) - (canvasElement.height * 0.1),
+                    HeadX,
+                    HeadY
+                ) < 60)
+            ) {
+                playSound(bell)
+                start = 1
+                hitOn = 1
+                stencyl(null)
+            }
+        }
+
+        if(start){
             let LPX = (leftShoulder.x * canvasElement.width + rightShoulder.x * canvasElement.width) / 2;
             let LPY = leftShoulder.y * canvasElement.height;
             let UPX = (leftShoulder.x * canvasElement.width + rightShoulder.x * canvasElement.width) / 2;
