@@ -7,6 +7,7 @@ import ArmsLock from "./Exercises/ArmsLock";
 import PendulumCirclesLeft from "./Exercises/PendulumCirclesLeft";
 import PendulumSidewaysLeft from "./Exercises/PendulumSidewaysLeft";
 import PendulumStraightLeft from "./Exercises/PendulumStraightLeft";
+import NextGenTracking from "./Exercises/NextGenTracking";
 
 export default function ExerciseManager({
     results: results,
@@ -146,6 +147,21 @@ export default function ExerciseManager({
         })
     } else if (exerciseName.current === "Pendulum Straight Left") {
         PendulumStraightLeft({
+            results: results,
+            camera: camera,
+            canvasRef: canvasRef,
+            webcamRef: webcamRef,
+            settimer: settimer,
+            setShowCoutdown: setShowCoutdown,
+            repref: repref,
+            setref: setref,
+            messageRef: messageRef,
+            setloading: setloading,
+            exerciseName: exerciseName,
+            stencyl: stencyl
+        })
+    } else if (exerciseName.current === "NextGenTracking") {
+        NextGenTracking({
             results: results,
             camera: camera,
             canvasRef: canvasRef,

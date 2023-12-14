@@ -13,7 +13,7 @@ import { BottomNavigationBar } from "./components/BottomNavigationBar";
 import { DemoVideo } from "./pages/Program/DemoVideo";
 import { DemoVideoAndLogs } from "./pages/Program/DemoVideoAndLogs";
 import { CameraRendering } from "./pages/Program/CameraRendering";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Auth } from "./pages/PartientAuth";
 import { DoctorAuth } from "./pages/DoctorAuth";
 import { DoctorDashboard } from "./pages/DoctorDashboard";

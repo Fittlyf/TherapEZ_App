@@ -9,14 +9,14 @@ export const drawPoint = (context, x, y, label) => {
 };
 
 export function connectPoint(canvasCtx, results, pointA, pointB, canvasRef) {
-const gradient = canvasCtx.createLinearGradient(0, 0, canvasRef.current.width, canvasRef.current.height);
-gradient.addColorStop(0, "red");
-gradient.addColorStop(1, "blue");
+  const gradient = canvasCtx.createLinearGradient(0, 0, canvasRef.current.width, canvasRef.current.height);
+  gradient.addColorStop(0, "red");
+  gradient.addColorStop(1, "blue");
 
   canvasCtx.strokeStyle = gradient;
   canvasCtx.lineWidth = 5;
   canvasCtx.lineCap = "round";
-  canvasCtx.lineJoin = "bevel"; 
+  canvasCtx.lineJoin = "bevel";
 
   canvasCtx.beginPath();
   canvasCtx.moveTo(
@@ -26,6 +26,28 @@ gradient.addColorStop(1, "blue");
   canvasCtx.lineTo(
     results?.poseLandmarks[pointB]?.x * canvasRef.current.width,
     results?.poseLandmarks[pointB]?.y * canvasRef.current.height
+  );
+  canvasCtx.stroke();
+}
+
+export function connectPointStencil(canvasCtx, results, pointA, pointB, canvasRef) {
+  const gradient = canvasCtx.createLinearGradient(0, 0, canvasRef.current.width, canvasRef.current.height);
+  gradient.addColorStop(0, "white");
+  gradient.addColorStop(1, "white");
+
+  canvasCtx.strokeStyle = gradient;
+  canvasCtx.lineWidth = 5;
+  canvasCtx.lineCap = "round";
+  canvasCtx.lineJoin = "bevel";
+
+  canvasCtx.beginPath();
+  canvasCtx.moveTo(
+    results?.pose_landmarks[pointA]?.x * canvasRef.current.width,
+    results?.pose_landmarks[pointA]?.y * canvasRef.current.height
+  );
+  canvasCtx.lineTo(
+    results?.pose_landmarks[pointB]?.x * canvasRef.current.width,
+    results?.pose_landmarks[pointB]?.y * canvasRef.current.height
   );
   canvasCtx.stroke();
 }

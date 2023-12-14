@@ -1,7 +1,7 @@
 import { IonContent, IonPage } from "@ionic/react";
 import { CardActionArea } from "@mui/material";
 import CameraPoseDetect from "./CameraComponent";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Slideshow from "./Slideshow";
 
 export const CameraRendering: React.FC = () => {

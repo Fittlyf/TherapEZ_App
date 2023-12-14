@@ -14,14 +14,9 @@ import PendulumCirclesLeft from "./Exercises/PendulumCirclesLeft";
 import PendulumSidewaysLeft from "./Exercises/PendulumSidewaysLeft";
 import PendulumStraightLeft from "./Exercises/PendulumStraightLeft";
 
-import PendulumCirclesStencyl1 from "../../Images/PendulumCircles1.png"
-import PendulumCirclesStencyl2 from "../../Images/PendulumCircles2.png"
-
-import RecordRTC from 'recordrtc';
-import playSound from "../../utils/PlaySound";
 import { Link } from "react-router-dom";
-import successSound from "../../sounds/excellent_work.wav";
 import ExerciseManager from "./ExerciseManager";
+import NextGenTracking from "./Exercises/NextGenTracking";
 
 let recorder;
 
@@ -282,6 +277,8 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
     }
     else if (exerciseName.current === 'Arms Lock') {
       exercise = ArmsLock
+    }else if(exerciseName.current === 'NextGenTracking'){
+      exercise = NextGenTracking
     }
 
     const pose = new Pose({

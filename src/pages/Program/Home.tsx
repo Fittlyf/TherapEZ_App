@@ -19,8 +19,6 @@ export const Home: React.FC = () => {
   const [google_business_name, set_google_business_name] = useState<string>('');
   const [google_business_review_link, set_google_business_review_link] = useState<string>('');
 
-  const history = useHistory()
-
   // * The Exercise that needs to be done by the patients logined
   // ^ id => the id of the exercise, name => name of the exercise, image => url of the image of the exercise
   const [exerciseDetails, setExerciseDetails] = useState<{ id: number, name: string, image: string, cover_image: string, sets: number }[]>([]);
@@ -116,7 +114,7 @@ export const Home: React.FC = () => {
       .then((data: any) => {
         console.log(data.data)
         const currentDate = new Date().toLocaleDateString();
-        
+
         // if (new Date(data.data[0]["prompt_review"]).toLocaleDateString() === currentDate) {
         //   set_google_business_review_link(data.data[0]['doctor']['company']['google_business_review_link'])
         //   set_google_business_name(data.data[0]['doctor']['company']['name'])
@@ -170,7 +168,7 @@ export const Home: React.FC = () => {
               {google_business_name}
             </span>{' '}
             clinic on google</div>
-          <CardActionArea onClick={()=>{
+          <CardActionArea onClick={() => {
             window.location.href = google_business_review_link
           }}>
             <div className="text-center bg-red-600 text-white p-3 rounded-md font-fredokaone text-xl">
@@ -214,6 +212,21 @@ export const Home: React.FC = () => {
       </div>
       <div className="flex flex-col justify-center">
         <img className="p-6" src={logo} alt="Brand Logo"></img>
+      </div>
+
+      <div className="flex justify-center m-3">
+        <button onClick={() => {
+
+          localStorage.setItem(
+            "exercise",
+            "NextGenTracking"
+          );
+
+          window.location.href = "/camera-rendering";
+
+        }} className="bg-blue-500 text-white px-5 py-5 rounded-full border-2 border-black shadow-2xl">
+          Next Gen Tracking (BETA)
+        </button>
       </div>
 
       <div className="flex justify-center">
