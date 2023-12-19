@@ -17,6 +17,15 @@ import PendulumStraightLeft from "./Exercises/PendulumStraightLeft";
 import { Link } from "react-router-dom";
 import ExerciseManager from "./ExerciseManager";
 import NextGenTracking from "./Exercises/NextGenTracking";
+import Arthritis9 from "./Exercises/Arthritis9";
+import Arthritis8 from "./Exercises/Arthritis8";
+import Arthritis7 from "./Exercises/Arthritis7";
+import Arthritis6 from "./Exercises/Arthritis6";
+import Arthritis5 from "./Exercises/Arthritis5";
+import Arthritis4 from "./Exercises/Arthritis4";
+import Arthritis3 from "./Exercises/Arthritis3";
+import Arthritis2 from "./Exercises/Arthritis2";
+import Arthritis1 from "./Exercises/Arthritis1";
 
 let recorder;
 
@@ -277,8 +286,26 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
     }
     else if (exerciseName.current === 'Arms Lock') {
       exercise = ArmsLock
-    }else if(exerciseName.current === 'NextGenTracking'){
+    } else if (exerciseName.current === 'NextGenTracking') {
       exercise = NextGenTracking
+    } else if (exerciseName.current === 'Arthritis1') {
+      exercise = Arthritis1
+    } else if (exerciseName.current === 'Arthritis2') {
+      exercise = Arthritis2
+    } else if (exerciseName.current === 'Arthritis3') {
+      exercise = Arthritis3
+    } else if (exerciseName.current === 'Arthritis4') {
+      exercise = Arthritis4
+    } else if (exerciseName.current === 'Arthritis5') {
+      exercise = Arthritis5
+    } else if (exerciseName.current === 'Arthritis6') {
+      exercise = Arthritis6
+    } else if (exerciseName.current === 'Arthritis7') {
+      exercise = Arthritis7
+    } else if (exerciseName.current === 'Arthritis8') {
+      exercise = Arthritis8
+    } else if (exerciseName.current === 'Arthritis9') {
+      exercise = Arthritis9
     }
 
     const pose = new Pose({

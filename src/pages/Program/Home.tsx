@@ -229,6 +229,141 @@ export const Home: React.FC = () => {
         </button>
       </div>
 
+      <div className="flex justify-center m-3">
+        <button onClick={() => {
+
+          localStorage.setItem(
+            "exercise",
+            "Arthritis1"
+          );
+
+          window.location.href = "/camera-rendering";
+
+        }} className="bg-blue-500 text-white px-5 py-5 rounded-full border-2 border-black shadow-2xl">
+          Arthritis Exercise 1
+        </button>
+      </div>
+
+      <div className="flex justify-center m-3">
+        <button onClick={() => {
+
+          localStorage.setItem(
+            "exercise",
+            "Arthritis2"
+          );
+
+          window.location.href = "/camera-rendering";
+
+        }} className="bg-blue-500 text-white px-5 py-5 rounded-full border-2 border-black shadow-2xl">
+          Arthritis Exercise 2
+        </button>
+      </div>
+
+      <div className="flex justify-center m-3">
+        <button onClick={() => {
+
+          localStorage.setItem(
+            "exercise",
+            "Arthritis3"
+          );
+
+          window.location.href = "/camera-rendering";
+
+        }} className="bg-blue-500 text-white px-5 py-5 rounded-full border-2 border-black shadow-2xl">
+          Arthritis Exercise 3
+        </button>
+      </div>
+
+      <div className="flex justify-center m-3">
+        <button onClick={() => {
+
+          localStorage.setItem(
+            "exercise",
+            "Arthritis4"
+          );
+
+          window.location.href = "/camera-rendering";
+
+        }} className="bg-blue-500 text-white px-5 py-5 rounded-full border-2 border-black shadow-2xl">
+          Arthritis Exercise 4
+        </button>
+      </div>
+
+      <div className="flex justify-center m-3">
+        <button onClick={() => {
+
+          localStorage.setItem(
+            "exercise",
+            "Arthritis5"
+          );
+
+          window.location.href = "/camera-rendering";
+
+        }} className="bg-blue-500 text-white px-5 py-5 rounded-full border-2 border-black shadow-2xl">
+          Arthritis Exercise 5
+        </button>
+      </div>
+
+      <div className="flex justify-center m-3">
+        <button onClick={() => {
+
+          localStorage.setItem(
+            "exercise",
+            "Arthritis6"
+          );
+
+          window.location.href = "/camera-rendering";
+
+        }} className="bg-blue-500 text-white px-5 py-5 rounded-full border-2 border-black shadow-2xl">
+          Arthritis Exercise 6
+        </button>
+      </div>
+
+      <div className="flex justify-center m-3">
+        <button onClick={() => {
+
+          localStorage.setItem(
+            "exercise",
+            "Arthritis7"
+          );
+
+          window.location.href = "/camera-rendering";
+
+        }} className="bg-blue-500 text-white px-5 py-5 rounded-full border-2 border-black shadow-2xl">
+          Arthritis Exercise 7
+        </button>
+      </div>
+
+      <div className="flex justify-center m-3">
+        <button onClick={() => {
+
+          localStorage.setItem(
+            "exercise",
+            "Arthritis8"
+          );
+
+          window.location.href = "/camera-rendering";
+
+        }} className="bg-blue-500 text-white px-5 py-5 rounded-full border-2 border-black shadow-2xl">
+          Arthritis Exercise 8
+        </button>
+      </div>
+
+      <div className="flex justify-center m-3">
+        <button onClick={() => {
+
+          localStorage.setItem(
+            "exercise",
+            "Arthritis9"
+          );
+
+          window.location.href = "/camera-rendering";
+
+        }} className="bg-blue-500 text-white px-5 py-5 rounded-full border-2 border-black shadow-2xl">
+          Arthritis Exercise 9
+        </button>
+      </div>
+
       <div className="flex justify-center">
         <button onClick={() => Handle$Start$All$Exercise()} className="bg-green-500 px-5 py-5 rounded-full border-2 border-black shadow-2xl">
           Today's Session
