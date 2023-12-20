@@ -53,7 +53,8 @@ const connectingPointsStencil = [
     [27, 29]
 ];
 
-const checkCoordinates = [15, 13, 11, 12, 14, 16]
+const checkCoordinates = [32]
+const degree_of_strictness = 60
 
 let poseData = []
 let frameNumber = 0;
@@ -168,6 +169,18 @@ export default function Arthritis5({
         if (isPointsClose(results.poseLandmarks, poseData[frameNumber].pose_landmarks, checkCoordinates, 100)) {
             frameNumber += 1;
         }
+        checkCoordinates.forEach(point => {
+            canvasCtx.beginPath();
+            canvasCtx.strokeStyle = "#00FF00";
+            canvasCtx.lineWidth = 2;
+            canvasCtx.arc(
+                (poseData[frameNumber].pose_landmarks[point].x * canvasElement.width),
+                (poseData[frameNumber].pose_landmarks[point].y * canvasElement.height),
+                degree_of_strictness,
+                2 * Math.PI, false
+            );
+            canvasCtx.stroke();
+        })
     }
 
     // ^ Points that needs to be shown in the canvas

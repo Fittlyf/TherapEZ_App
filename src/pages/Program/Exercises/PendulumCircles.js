@@ -280,7 +280,7 @@ export default function PendulumCircles({
                 (5 / 6) * Math.PI
             );
             canvasCtx.stroke();
-            canvasCtx.setLineDash([0, 0]);
+            canvasCtx.setLineDash([0, 0]); 
         }
 
         //center
