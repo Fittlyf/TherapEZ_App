@@ -36,6 +36,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
   const canvasRef = useRef(null);
   const StateRef = useRef(0);
   const exerciseName = useRef("")
+  const exerciseID = useRef(0)
   const [stencyl, setStencyl] = useState(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -249,6 +250,7 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
           messageRef: messageRef,
           setloading: setloading,
           exerciseName: exerciseName,
+          exerciseID: exerciseID,
           stencyl: setStencyl
         })
       } else {
@@ -260,6 +262,11 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
 
   useEffect(() => {
     exerciseName.current = localStorage.getItem("exercise");
+    exerciseID.current = localStorage.getItem("exerciseID");
+
+    console.log(exerciseName)
+    console.log(exerciseID)
+
     if (exerciseName === 'Pendulum Straight Right') {
       exercise = PendulumStraight
     }

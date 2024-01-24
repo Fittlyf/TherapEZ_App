@@ -214,7 +214,7 @@ export const Home: React.FC = () => {
         <img className="p-6" src={logo} alt="Brand Logo"></img>
       </div>
 
-      <div className="flex justify-center m-3">
+      {/* <div className="flex justify-center m-3">
         <button onClick={() => {
 
           localStorage.setItem(
@@ -368,7 +368,8 @@ export const Home: React.FC = () => {
         <button onClick={() => Handle$Start$All$Exercise()} className="bg-green-500 px-5 py-5 rounded-full border-2 border-black shadow-2xl">
           Today's Session
         </button>
-      </div>
+      </div> */}
+
       <div className={`${value === 0 ? "pointer-events-auto" : "pointer-events-none"} overflow-auto`}>
         {exerciseDetails.map((exercise) => {
           const entry = findEntryByExercise(individualSetReps, exercise.id)

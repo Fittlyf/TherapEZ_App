@@ -17,6 +17,7 @@ import Arthritis5 from "./Exercises/Arthritis5";
 import Arthritis4 from "./Exercises/Arthritis4";
 import Arthritis3 from "./Exercises/Arthritis3";
 import Arthritis2 from "./Exercises/Arthritis2";
+import Exercise from "./Exercises/Exercise";
 
 export default function ExerciseManager({
     results: results,
@@ -30,6 +31,7 @@ export default function ExerciseManager({
     messageRef: messageRef,
     setloading: setloading,
     exerciseName: exerciseName,
+    exerciseID: exerciseID,
     stencyl: stencyl
 }) {
 
@@ -78,8 +80,7 @@ export default function ExerciseManager({
             exerciseName: exerciseName,
             stencyl: stencyl
         })
-    }
-    else if (exerciseName.current === "Butterfly") {
+    } else if (exerciseName.current === "Butterfly") {
         Butterfly({
             results: results,
             camera: camera,
@@ -199,7 +200,7 @@ export default function ExerciseManager({
             exerciseName: exerciseName,
             stencyl: stencyl
         })
-    }else if (exerciseName.current === "Arthritis2") {
+    } else if (exerciseName.current === "Arthritis2") {
         Arthritis2({
             results: results,
             camera: camera,
@@ -214,7 +215,7 @@ export default function ExerciseManager({
             exerciseName: exerciseName,
             stencyl: stencyl
         })
-    }else if (exerciseName.current === "Arthritis3") {
+    } else if (exerciseName.current === "Arthritis3") {
         Arthritis3({
             results: results,
             camera: camera,
@@ -229,7 +230,7 @@ export default function ExerciseManager({
             exerciseName: exerciseName,
             stencyl: stencyl
         })
-    }else if (exerciseName.current === "Arthritis4") {
+    } else if (exerciseName.current === "Arthritis4") {
         Arthritis4({
             results: results,
             camera: camera,
@@ -244,7 +245,7 @@ export default function ExerciseManager({
             exerciseName: exerciseName,
             stencyl: stencyl
         })
-    }else if (exerciseName.current === "Arthritis5") {
+    } else if (exerciseName.current === "Arthritis5") {
         Arthritis5({
             results: results,
             camera: camera,
@@ -259,7 +260,7 @@ export default function ExerciseManager({
             exerciseName: exerciseName,
             stencyl: stencyl
         })
-    }else if (exerciseName.current === "Arthritis6") {
+    } else if (exerciseName.current === "Arthritis6") {
         Arthritis6({
             results: results,
             camera: camera,
@@ -274,7 +275,7 @@ export default function ExerciseManager({
             exerciseName: exerciseName,
             stencyl: stencyl
         })
-    }else if (exerciseName.current === "Arthritis7") {
+    } else if (exerciseName.current === "Arthritis7") {
         Arthritis7({
             results: results,
             camera: camera,
@@ -289,7 +290,7 @@ export default function ExerciseManager({
             exerciseName: exerciseName,
             stencyl: stencyl
         })
-    }else if (exerciseName.current === "Arthritis8") {
+    } else if (exerciseName.current === "Arthritis8") {
         Arthritis8({
             results: results,
             camera: camera,
@@ -304,7 +305,7 @@ export default function ExerciseManager({
             exerciseName: exerciseName,
             stencyl: stencyl
         })
-    }else if (exerciseName.current === "Arthritis9") {
+    } else if (exerciseName.current === "Arthritis9") {
         Arthritis9({
             results: results,
             camera: camera,
@@ -317,6 +318,22 @@ export default function ExerciseManager({
             messageRef: messageRef,
             setloading: setloading,
             exerciseName: exerciseName,
+            stencyl: stencyl
+        })
+    } else {
+        Exercise({
+            results: results,
+            camera: camera,
+            canvasRef: canvasRef,
+            webcamRef: webcamRef,
+            settimer: settimer,
+            setShowCoutdown: setShowCoutdown,
+            repref: repref,
+            setref: setref,
+            messageRef: messageRef,
+            setloading: setloading,
+            exerciseName: exerciseName,
+            exerciseID: exerciseID,
             stencyl: stencyl
         })
     }
