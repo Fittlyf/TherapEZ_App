@@ -1,5 +1,5 @@
 import axios from "axios";
-import { connectPoint, connectPointStencil, drawPointOnCanvas } from "./PoseFunctions";
+import { connectPoint, connectPointStencil, connectPointStencilPhysio, drawPointOnCanvas, drawPointOnCanvasPhysio } from "./PoseFunctions";
 
 var globalStart = 0;
 
@@ -59,6 +59,7 @@ let poseData = []
 let degree_of_strictness = 100
 
 let frameNumber = 0;
+let frameNumberPhysio = 0;
 
 // Fetch the JSON data
 // fetch('arthritis1.json')
@@ -87,7 +88,7 @@ axios.get(`${process.env.REACT_APP_API_BASEURL}/exercise/${localStorage.getItem(
 
         console.log(response.data)
         var coordinated_link = response.data.coordinates_file
-        checkCoordinates = response.data.matching_points_data.points
+        checkCoordinates = [15, 13, 11, 12, 14, 16] || response.data.matching_points_data.points
         degree_of_strictness = response.data.degree_of_strictness
 
         fetch(coordinated_link)
@@ -194,19 +195,52 @@ export default function Exercise({
         requestAnimationFrame(renderFrame);
     };
 
+    const renderFramePhysio = async () => {
+        const frameDelay = 1;
+
+        if (!poseData || frameNumberPhysio >= poseData.length) {
+            frameNumberPhysio = 0
+            console.log("LOOPED")
+        }
+
+        const frame = poseData[frameNumberPhysio];
+
+        connectingPointsStencil.map((e) => {
+            connectPointStencilPhysio(canvasCtx, frame, e[0], e[1], canvasRef);
+        });
+
+        drawPointOnCanvasPhysio(
+            frame.pose_landmarks,
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31],
+            canvasCtx,
+            canvasElement
+        );
+
+        await new Promise(resolve => setTimeout(resolve, frameDelay)); 
+        
+        frameNumberPhysio += 1
+
+        requestAnimationFrame(renderFramePhysio);
+    };
+
     const startRendering = () => {
         requestAnimationFrame(renderFrame);
+    };
+
+    const startRenderingPhysio = () => {
+        requestAnimationFrame(renderFramePhysio);
     };
 
     if (playInitVoice) {
         playInitVoice = false
         setloading(false)
         startRendering()
+        startRenderingPhysio()
     }
 
     // Check if points are close
     if (poseData[frameNumber]) {
-        if (isPointsClose(results.poseLandmarks, poseData[frameNumber].pose_landmarks, checkCoordinates, 100)) {
+        if (isPointsClose(results.poseLandmarks, poseData[frameNumber].pose_landmarks, checkCoordinates, degree_of_strictness)) {
             frameNumber += 1;
         }
     }
