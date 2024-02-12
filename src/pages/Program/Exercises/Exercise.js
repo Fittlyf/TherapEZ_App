@@ -1,5 +1,5 @@
 import axios from "axios";
-import { connectPoint, connectPointStencil, connectPointStencilPhysio, drawPointOnCanvas, drawPointOnCanvasPhysio } from "./PoseFunctions";
+import { connectPoint, connectPointStencil, connectPointStencilPhysio, drawCircleOnCanvas, drawPointOnCanvas, drawPointOnCanvasPhysio } from "./PoseFunctions";
 
 var globalStart = 0;
 
@@ -88,7 +88,7 @@ axios.get(`${process.env.REACT_APP_API_BASEURL}/exercise/${localStorage.getItem(
 
         console.log(response.data)
         var coordinated_link = response.data.coordinates_file
-        checkCoordinates = [15, 13, 11, 12, 14, 16] || response.data.matching_points_data.points
+        checkCoordinates = [26, 32] || response.data.matching_points_data.points
         degree_of_strictness = response.data.degree_of_strictness
 
         fetch(coordinated_link)
@@ -249,6 +249,7 @@ export default function Exercise({
     const allowedPoints = [11, 12, 13, 14, 15, 16, 23, 24];
 
     if (results.poseLandmarks) {
+
         connectingPoints.map((e) => {
             connectPoint(canvasCtx, results, e[0], e[1], canvasRef);
         });
@@ -259,5 +260,14 @@ export default function Exercise({
             canvasCtx,
             canvasElement
         );
+
+        drawCircleOnCanvas(
+            results.poseLandmarks,
+            checkCoordinates,
+            canvasCtx,
+            canvasElement
+        );
     }
 }
+
+// /me stays with the clear majority, in the group of approx 7999991000 people not attending

@@ -18,6 +18,14 @@ export const drawPointPhysio = (context, x, y, label) => {
   context.stroke();
 };
 
+export const drawCircle = (context, x, y, label) => {
+  context.beginPath();
+  context.arc(x, y, 25, 0, 2 * Math.PI, false);
+  context.lineWidth = 2;
+  context.strokeStyle = "white";
+  context.stroke();
+};
+
 export function connectPoint(canvasCtx, results, pointA, pointB, canvasRef) {
   const gradient = canvasCtx.createLinearGradient(0, 0, canvasRef.current.width, canvasRef.current.height);
   gradient.addColorStop(0, "red");
@@ -93,6 +101,23 @@ export const drawPointOnCanvas = (
   landmarks.map((e, i) => {
     if (allowedPoints.includes(i))
       drawPoint(
+        canvasCtx,
+        e.x * canvasElement.width,
+        e.y * canvasElement.height,
+        i
+      );
+  });
+};
+
+export const drawCircleOnCanvas = (
+  landmarks,
+  allowedPoints,
+  canvasCtx,
+  canvasElement
+) => {
+  landmarks.map((e, i) => {
+    if (allowedPoints.includes(i))
+      drawCircle(
         canvasCtx,
         e.x * canvasElement.width,
         e.y * canvasElement.height,
