@@ -15,7 +15,7 @@ const config: CapacitorConfig = {
     }
   },
   server: {
-    url:"https://bharatsiksha.com/",
+    url:"https://therapezweb.fittlyf.com/",
     androidScheme: "https"
   }
 };

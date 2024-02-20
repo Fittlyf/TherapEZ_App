@@ -30,7 +30,7 @@ export const Auth: React.FC = () => {
             },
         })
             .then((data: any) => {
-                console.log(data.toString());
+                console.log(data);
                 if (data) {
                     if (data.data.token) {
                         message.success("success")

@@ -62,16 +62,16 @@ let frameNumber = 0;
 let frameNumberPhysio = 0;
 
 // Fetch the JSON data
-// fetch('arthritis1.json')
-//     .then(response => response.json())
-//     .then((jsonData) => {
+fetch('output.json')
+    .then(response => response.json())
+    .then((jsonData) => {
 
-//         poseData = jsonData;
+        poseData = jsonData;
 
-//     }).then(() => {
+    }).then(() => {
 
-//     })
-//     .catch(error => console.error('Error fetching JSON:', error));
+    })
+    .catch(error => console.error('Error fetching JSON:', error));
 
 // Fetch the JSON data
 axios.get(`${process.env.REACT_APP_API_BASEURL}/exercise/${localStorage.getItem("exerciseID")}/`, {
@@ -88,7 +88,7 @@ axios.get(`${process.env.REACT_APP_API_BASEURL}/exercise/${localStorage.getItem(
 
         console.log(response.data)
         var coordinated_link = response.data.coordinates_file
-        checkCoordinates = [26, 32] || response.data.matching_points_data.points
+        checkCoordinates = [15, 13, 11, 12, 14, 16] || response.data.matching_points_data.points
         degree_of_strictness = response.data.degree_of_strictness
 
         fetch(coordinated_link)
@@ -97,7 +97,7 @@ axios.get(`${process.env.REACT_APP_API_BASEURL}/exercise/${localStorage.getItem(
 
                 console.log(jsonData)
 
-                poseData = jsonData;
+                // poseData = jsonData;
 
             }).then(() => {
 
