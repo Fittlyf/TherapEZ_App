@@ -124,6 +124,9 @@ export default function Exercise({
     stencyl: stencyl
 }) {
 
+    setref.current = `0/2`
+    repref.current = `0/2`
+
     if (globalStart === 0) {
         globalStart = 1
     }

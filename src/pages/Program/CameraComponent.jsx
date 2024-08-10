@@ -266,6 +266,11 @@ function CameraPoseDetect({ showCoutdown, setShowCoutdown, loading, setloading, 
 
     console.log(exerciseName)
     console.log(exerciseID)
+    const exerciseIndividualRepSets = JSON.parse(localStorage.getItem("individualSetReps")).find((exercise) => exercise.exercise === parseInt(exerciseID.current))
+    setref.current = `0/${exerciseIndividualRepSets.sets}`
+    repref.current = `0/${exerciseIndividualRepSets.reps}`
+
+    console.log(setref, repref, setref.current, repref.current)
 
     if (exerciseName === 'Pendulum Straight Right') {
       exercise = PendulumStraight
